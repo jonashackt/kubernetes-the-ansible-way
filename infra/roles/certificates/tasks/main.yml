@@ -9,8 +9,7 @@
     mode: 0755
   with_items:
     - /vagrant/certificates
-    - /opt/cfssl-config/ca
-    - /opt/cfssl-config/admin
+    - /opt/cfssl-config
 
 - name: copy cfssl config files
   copy:
