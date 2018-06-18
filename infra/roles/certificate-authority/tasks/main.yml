@@ -9,7 +9,8 @@
     mode: 0755
   with_items:
     - /vagrant/certificates
-    - /opt/cfssl-config
+    - /opt/cfssl-config/ca
+    - /opt/cfssl-config/admin
 
 - name: copy cfssl config files
   copy:
@@ -17,8 +18,14 @@
     dest: "/opt/cfssl-config/{{ item }}"
   with_items:
     - ca-config.json
-    - ca-csr.json
-    - admin-csr.json
+
+- name: create cfssl config files
+  template:
+    src: "templates/csr.json.j2"
+    dest: "/opt/cfssl-config/{{ item }}-csr.json"
+  with_items:
+    - ca
+    - admin
 
 - name: generate ca keys
   shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
@@ -26,14 +33,10 @@
     chdir: /vagrant/certificates
     creates: /vagrant/certificates/ca-key.pem
 
-- name: generate admin key
-  shell: |
-    cfssl gencert \
-      -ca=ca.pem \
-      -ca-key=ca-key.pem \
-      -config=/opt/cfssl-config/ca-config.json \
-      -profile=kubernetes \
-      /opt/cfssl-config/admin-csr.json | cfssljson -bare admin
+- name: generate admin keys
+  shell: "cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=/opt/cfssl-config/ca-config.json -profile=kubernetes /opt/cfssl-config/{{ item }}-csr.json | cfssljson -bare {{ item }}"
   args:
     chdir: /vagrant/certificates
-    creates: /vagrant/certificates/admin-key.pem
+    creates: "/vagrant/certificates/{{ item }}-key.pem"
+  with_items:
+    - admin
