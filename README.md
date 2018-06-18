@@ -9,7 +9,7 @@
 	 * Certified Kubernetes Application Developer [(CKAD)][2] | [Exam Tips][4]
  * both certifications with online exam for each $300 and it includes one free retake.
 
- ## Prerequisites
+## Prerequisites
 
 * Clone repos
 * `vagrant dns --install`
