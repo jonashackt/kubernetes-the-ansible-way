@@ -1,0 +1,5 @@
+- hosts: all
+
+- hosts: controller
+
+- hosts: worker
