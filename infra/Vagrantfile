@@ -1,3 +1,21 @@
+module OS
+    def OS.windows?
+        (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def OS.mac?
+        (/darwin/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def OS.unix?
+        !OS.windows?
+    end
+
+    def OS.linux?
+        OS.unix? and not OS.mac?
+    end
+end
+
 Vagrant.configure("2") do |config|
     check_prerequisites
 
@@ -49,7 +67,9 @@ end
 def setup_dns(name, machine)
     machine.dns.tld = 'k8s'
     machine.vm.hostname = name
-
+    if OS.linux?
+      machine.hostsupdater.aliases = [ "#{name}.k8s" ]
+    end
     machine.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
