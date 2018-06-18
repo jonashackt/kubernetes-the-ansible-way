@@ -7,3 +7,6 @@
 * Mikrophone
 * `a clean surface with no obstructions overhead or underneath`
 * https://www.examslocal.com/ScheduleExam/Home/CompatibilityCheck (Option 3, Sponsor=Linux Foundation, )
+
+# Was müssen wir können?
+* https://github.com/cncf/curriculum/blob/master/certified_kubernetes_administrator_exam_v1.9.0.pdf
