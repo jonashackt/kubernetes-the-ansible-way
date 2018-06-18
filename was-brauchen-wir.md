@@ -1,4 +1,5 @@
 # Voraussetzungen für die Online Prüfung
+* Regestrierung: https://training.linuxfoundation.org/linux-courses/system-administration-training/kubernetes-fundamentals
 * Chrome oder Chromium
 * https://chrome.google.com/webstore/detail/innovative-exams-screensh/dkbjhjljfaagngbdhomnlcheiiangfle
 * Internet
