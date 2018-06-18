@@ -7,7 +7,7 @@
 
 - hosts: worker
 
-- hosts: controller-0
+- hosts: client
   become: yes
   roles:
     - certificates
