@@ -1,4 +1,4 @@
-- name: download cfssl
+- name: install cfssl
   apt:
     name: golang-cfssl
 
@@ -18,9 +18,22 @@
   with_items:
     - ca-config.json
     - ca-csr.json
+    - admin-csr.json
 
 - name: generate ca keys
   shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
   args:
     chdir: /vagrant/certificates
     creates: /vagrant/certificates/ca-key.pem
+
+- name: generate admin key
+  shell: |
+    cfssl gencert \
+      -ca=ca.pem \
+      -ca-key=ca-key.pem \
+      -config=/opt/cfssl-config/ca-config.json \
+      -profile=kubernetes \
+      /opt/cfssl-config/admin-csr.json | cfssljson -bare admin
+  args:
+    chdir: /vagrant/certificates
+    creates: /vagrant/certificates/admin-key.pem
