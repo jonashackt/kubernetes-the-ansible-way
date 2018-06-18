@@ -16,3 +16,4 @@
   become: yes
   roles:
     - certificates
+    - controller-lb
