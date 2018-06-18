@@ -1,3 +1,8 @@
+- hosts: all
+  become: yes
+  roles:
+    - apt-updates
+
 - hosts: k8s-node
   become: yes
   roles:
