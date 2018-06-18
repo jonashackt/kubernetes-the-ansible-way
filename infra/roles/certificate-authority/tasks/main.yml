@@ -1,11 +1,6 @@
 - name: download cfssl
-  get_url:
-    url: "https://pkg.cfssl.org/R1.2/{{ item }}"
-    dest: "/usr/local/bin/{{ item | replace('_linux-amd64', '') }}"
-    mode: 0755
-  with_items:
-    - cfssl_linux-amd64
-    - cfssljson_linux-amd64
+  apt:
+    name: golang-cfssl
 
 - name: ensure dirs exist
   file:

@@ -1,7 +1,7 @@
 Vagrant.configure("2") do |config|
     check_prerequisites
 
-    config.vm.box = "ubuntu/xenial64"
+    config.vm.box = "ubuntu/bionic64"
 
     (0..2).each do |index|
         type = :controller
