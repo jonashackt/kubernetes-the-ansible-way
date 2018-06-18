@@ -8,6 +8,10 @@ worker-0        ansible_host=worker-0.k8s
 worker-1        ansible_host=worker-1.k8s
 worker-2        ansible_host=worker-2.k8s
 
+[k8s-node:children]
+controller
+worker
+
 [client]
 client-0        ansible_host=client-0.k8s
 

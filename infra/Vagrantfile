@@ -3,28 +3,18 @@ Vagrant.configure("2") do |config|
 
     config.vm.box = "ubuntu/bionic64"
 
-    (0..2).each do |index|
-        type = :controller
+    machines = {
+        :controller => 3,
+        :worker => 3,
+        :client => 1
+    }
 
-        config.vm.define machine_name(type, index) do |machine|
-            setup(type, index, machine)
-            provision(machine)
-        end
-    end
-
-    (0..2).each do |index|
-        type = :worker
-
-        config.vm.define machine_name(type, index) do |machine|
-            setup(type, index, machine)
-        end
-    end
-
-    (0..0).each do |index|
-        type = :client
-
-        config.vm.define machine_name(type, index) do |machine|
-            setup(:client, 0, machine)
+    machines.each do |type, count|
+        (0...count).each do |index|
+            config.vm.define machine_name(type, index) do |machine|
+                setup(type, index, machine)
+                provision(machine)
+            end
         end
     end
 end
