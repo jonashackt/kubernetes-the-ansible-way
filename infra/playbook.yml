@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: k8s-node
   become: yes
   roles:
     - docker
@@ -6,3 +6,8 @@
 - hosts: controller
 
 - hosts: worker
+
+- hosts: controller-0
+  become: yes
+  roles:
+    - certificate-authority

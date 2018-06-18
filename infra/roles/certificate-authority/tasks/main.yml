@@ -1,0 +1,31 @@
+- name: download cfssl
+  get_url:
+    url: "https://pkg.cfssl.org/R1.2/{{ item }}"
+    dest: "/usr/local/bin/{{ item | replace('_linux-amd64', '') }}"
+    mode: 0755
+  with_items:
+    - cfssl_linux-amd64
+    - cfssljson_linux-amd64
+
+- name: ensure dirs exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /vagrant/certificates
+    - /opt/cfssl-config
+
+- name: copy cfssl config files
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/cfssl-config/{{ item }}"
+  with_items:
+    - ca-config.json
+    - ca-csr.json
+
+- name: generate ca keys
+  shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
+  args:
+    chdir: /vagrant/certificates
+    creates: /vagrant/certificates/ca-key.pem
