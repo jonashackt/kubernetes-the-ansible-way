@@ -31,6 +31,8 @@
     - { prefix: 'system:', name: kube-controller-manager }
     - { prefix: 'system:', name: kube-proxy }
     - { prefix: 'system:', name: kube-scheduler }
+    - { prefix: '', name: kubernetes }
+    - { prefix: '', name: service-accounts }
 
 - name: generate ca keys
   shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
@@ -38,7 +40,7 @@
     chdir: /vagrant/certificates
     creates: /vagrant/certificates/ca-key.pem
 
-- name: generate Client Certificates for admin, kube-controller-manager, kube-proxy, kube-scheduler
+- name: generate Client Certificates for admin, kube-controller-manager, kube-proxy, kube-scheduler, service-accounts
   shell:
    'cfssl gencert \
       -ca=ca.pem \
@@ -54,6 +56,7 @@
     - kube-controller-manager
     - kube-proxy
     - kube-scheduler
+    - service-accounts
 
 - name: generate Kubelet Client Certificates
   shell:
@@ -71,3 +74,16 @@
     - { node: worker-0, ip: 172.16.2.100 }
     - { node: worker-1, ip: 172.16.2.101 }
     - { node: worker-2, ip: 172.16.2.102 }
+
+- name: generate Kubernetes API Server Certificate
+  shell:
+   'cfssl gencert \
+      -ca=ca.pem \
+      -ca-key=ca-key.pem \
+      -config=/opt/cfssl-config/ca-config.json \
+      -hostname=10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,172.16.2.1,172.16.2.10,172.16.2.11,172.16.2.12,172.16.2.1,127.0.0.1,kubernetes.default \
+      -profile=kubernetes \
+      /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes'
+  args:
+    chdir: /vagrant/certificates
+    creates: "/vagrant/certificates/kubernetes-key.pem"
