@@ -28,6 +28,9 @@
     - { prefix: 'system:node:', name: worker-0 }
     - { prefix: 'system:node:', name: worker-1 }
     - { prefix: 'system:node:', name: worker-2 }
+    - { prefix: 'system:', name: kube-controller-manager }
+    - { prefix: 'system:', name: kube-proxy }
+    - { prefix: 'system:', name: kube-scheduler }
 
 - name: generate ca keys
   shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
@@ -35,7 +38,7 @@
     chdir: /vagrant/certificates
     creates: /vagrant/certificates/ca-key.pem
 
-- name: generate admin keys
+- name: generate Client Certificates for admin, kube-controller-manager, kube-proxy, kube-scheduler
   shell:
    'cfssl gencert \
       -ca=ca.pem \
@@ -48,6 +51,9 @@
     creates: "/vagrant/certificates/{{ item }}-key.pem"
   with_items:
     - admin
+    - kube-controller-manager
+    - kube-proxy
+    - kube-scheduler
 
 - name: generate Kubelet Client Certificates
   shell:
