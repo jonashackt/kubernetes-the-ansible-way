@@ -10,3 +10,17 @@
 
 # Was müssen wir können?
 * https://github.com/cncf/curriculum/blob/master/certified_kubernetes_administrator_exam_v1.9.0.pdf
+* * Unsere "Lernreihenfolge"
+* * * Core Concepts
+* * * * Kubernetes cluster architecture
+* * * * Services and other network primitives
+* * * * Understand the Kubernetes API primitives.
+* * * Installation
+* * * Networking
+* * * Scheduling
+* * * Application Lifecycle Management
+* * * Storage
+* * * Security
+* * * Logging and Monitoring
+* * * Cluster Maintenance
+* * * Troubleshooting
