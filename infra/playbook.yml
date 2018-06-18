@@ -10,4 +10,4 @@
 - hosts: controller-0
   become: yes
   roles:
-    - certificate-authority
+    - certificates
