@@ -1,0 +1,47 @@
+- name: download and extract ectd
+  unarchive:
+    src: https://github.com/coreos/etcd/releases/download/v3.3.5/etcd-v3.3.5-linux-amd64.tar.gz
+    remote_src: yes
+    dest: /tmp
+
+- name: install etcd
+  copy:
+    src: "/tmp/etcd-v3.3.5-linux-amd64/{{ item }}"
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: 0755
+    owner: root
+    group: root
+  with_items:
+    - etcd
+    - etcdctl
+
+- name: ensure dirs exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /etc/etcd
+
+- name: copy ca.pem file
+  copy:
+    src: "/vagrant/certificates/{{ item }}"
+    dest: "/etc/etcd/{{ item }}"
+    remote_src: yes
+  with_items:
+    - ca.pem
+    - kubernetes-key.pem
+    - kubernetes.pem
+
+- name: create etcd service config
+  template:
+    src: templates/etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
+
+- name: ensure etcd service is restarted
+  service:
+    name: etcd
+    state: restarted
+    daemon_reload: yes
+    enabled: yes

@@ -11,6 +11,9 @@
     - docker
 
 - hosts: controller
+  become: yes
+  roles:
+    - etcd
 
 - hosts: worker
 
