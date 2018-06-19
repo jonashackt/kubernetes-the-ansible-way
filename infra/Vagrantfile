@@ -31,7 +31,6 @@ Vagrant.configure("2") do |config|
         (0...count).each do |index|
             config.vm.define machine_name(type, index) do |machine|
                 setup(type, index, machine)
-                provision(machine)
             end
         end
     end
@@ -41,13 +40,6 @@ def setup(type, index, machine)
     machine.vm.network "private_network", ip: machine_ip(type, index)
     setup_dns(machine_name(type, index), machine)
     define_resources(machine_name(type, index), machine)
-end
-
-def provision(machine)
-    machine.vm.provision :ansible do |ansible|
-        ansible.playbook = 'playbook.yml'
-        ansible.inventory_path = 'hosts'
-    end
 end
 
 def machine_ip(type, index)

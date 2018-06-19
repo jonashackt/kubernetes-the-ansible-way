@@ -1,16 +1,16 @@
 [controller]
-controller-0    ansible_host=172.16.2.10 k8s_overlay_ip=10.240.0.10
-controller-1    ansible_host=172.16.2.11 k8s_overlay_ip=10.240.0.11
-controller-2    ansible_host=172.16.2.12 k8s_overlay_ip=10.240.0.12
+controller-0    ansible_host=172.16.2.10 k8s_overlay_ip=10.240.0.10 ansible_ssh_private_key_file=.vagrant/machines/controller-0/virtualbox/private_key
+controller-1    ansible_host=172.16.2.11 k8s_overlay_ip=10.240.0.11 ansible_ssh_private_key_file=.vagrant/machines/controller-1/virtualbox/private_key
+controller-2    ansible_host=172.16.2.12 k8s_overlay_ip=10.240.0.12 ansible_ssh_private_key_file=.vagrant/machines/controller-2/virtualbox/private_key
 
 [worker]
-worker-0        ansible_host=172.16.2.100
-worker-1        ansible_host=172.16.2.101
-worker-2        ansible_host=172.16.2.102
+worker-0        ansible_host=172.16.2.100                           ansible_ssh_private_key_file=.vagrant/machines/worker-0/virtualbox/private_key
+worker-1        ansible_host=172.16.2.101                           ansible_ssh_private_key_file=.vagrant/machines/worker-1/virtualbox/private_key
+worker-2        ansible_host=172.16.2.102                           ansible_ssh_private_key_file=.vagrant/machines/worker-2/virtualbox/private_key
 
 [k8s-node:children]
 controller
 worker
 
 [client]
-client-0        ansible_host=172.16.2.200
+client-0        ansible_host=172.16.2.200                           ansible_ssh_private_key_file=.vagrant/machines/client-0/virtualbox/private_key
