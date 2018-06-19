@@ -86,7 +86,7 @@ end
 def define_resources(name, machine)
     machine.vm.provider :virtualbox do |vb|
         vb.name = name
-        vb.memory = 1024
+        vb.memory = 768
         vb.cpus = 1
     end
 end
