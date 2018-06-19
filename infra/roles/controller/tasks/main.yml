@@ -117,14 +117,14 @@
 
 - name: copy rbac-cluster-role.yaml
   copy:
-    src: {{ item }}
+    src: "{{ item }}"
     dest: /etc/kubernetes/config/
-  with_items
+  with_items:
     - rbac-cluster-role.yaml
     - rbac-cluster-role-binding.yaml
 
 - name: apply rbac
-  shell: kubectl apply --kubeconfig admin.kubeconfig -f {{ item }}
+  shell: "kubectl apply --kubeconfig admin.kubeconfig -f {{ item }}"
   with_items:
     - /etc/kubernetes/config/rbac-cluster-role.yaml
     - /etc/kubernetes/config/rbac-cluster-role-binding.yaml
