@@ -24,16 +24,16 @@
     src: templates/csr.json.j2
     dest: "/opt/cfssl-config/{{ item.name }}-csr.json"
   with_items:
-    - { prefix: '', name: ca }
-    - { prefix: '', name: admin }
-    - { prefix: 'system:node:', name: worker-0 }
-    - { prefix: 'system:node:', name: worker-1 }
-    - { prefix: 'system:node:', name: worker-2 }
-    - { prefix: 'system:', name: kube-controller-manager }
-    - { prefix: 'system:', name: kube-proxy }
-    - { prefix: 'system:', name: kube-scheduler }
-    - { prefix: '', name: kubernetes }
-    - { prefix: '', name: service-account }
+    - { prefix: '', name: ca, o: Kubernetes }
+    - { prefix: '', name: admin, o: "system:masters" }
+    - { prefix: 'system:node:', name: worker-0, o: "system:nodes" }
+    - { prefix: 'system:node:', name: worker-1, o: "system:nodes" }
+    - { prefix: 'system:node:', name: worker-2, o: "system:nodes" }
+    - { prefix: 'system:', name: kube-controller-manager, o: "system:kube-controller-manager" }
+    - { prefix: 'system:', name: kube-proxy, o: "system:node-proxier" }
+    - { prefix: 'system:', name: kube-scheduler, o: "system:kube-scheduler" }
+    - { prefix: '', name: kubernetes, o: Kubernetes }
+    - { prefix: '', name: service-account, o: Kubernetes }
 
 - name: generate ca keys
   shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
