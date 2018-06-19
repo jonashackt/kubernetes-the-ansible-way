@@ -74,34 +74,6 @@
     - kube-controller-manager
     - kube-scheduler
 
-# waaaat... really? don't think we need that
-- name: install nginx
-  apt:
-    name: nginx
-
-- name: copy kubernetes.default.svc.cluster.local
-  copy:
-    src: kubernetes.default.svc.cluster.local
-    dest: /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
-
-- name: link to kubernetes.default.svc.cluster.local
-  file:
-    path: /etc/nginx/sites-enabled/kubernetes.default.svc.cluster.local
-    src: /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
-    state: link
-
-- name: ensure nginx service is installed and restarted
-  service:
-    name: nginx
-    state: restarted
-    enabled: yes
-
-- name: allow all access to tcp port 80
-  ufw:
-    rule: allow
-    port: 80
-    proto: tcp
-
 - name: verify k8s cluster
   shell: kubectl get componentstatuses --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
   register: result
