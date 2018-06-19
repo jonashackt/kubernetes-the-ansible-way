@@ -78,13 +78,13 @@
 
 - name: generate Kubernetes API Server Certificate
   shell:
-   'cfssl gencert \
+   "cfssl gencert \
       -ca=ca.pem \
       -ca-key=ca-key.pem \
       -config=/opt/cfssl-config/ca-config.json \
-      -hostname=10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,{{ kubernetes_public_address }},127.0.0.1,kubernetes.default \
+      -hostname=10.32.0.1,{% for item in groups['controller'] %}{{ hostvars[item].inventory_hostname }}=https://{{ hostvars[item].ansible_host }}:2380{{ ',' if not loop.last else ''}}{% endfor %},{{ kubernetes_public_address }},127.0.0.1,kubernetes.default \
       -profile=kubernetes \
-      /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes'
+      /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes"
   args:
     chdir: /vagrant/certificates
     creates: "/vagrant/certificates/kubernetes-key.pem"
