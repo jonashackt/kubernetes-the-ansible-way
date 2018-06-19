@@ -1,0 +1,103 @@
+- name: download controller binaries
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubectl
+
+- name: ensure directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/kubernetes/config
+    - /var/lib/kubernetes
+
+- name: copy certificates
+  copy:
+    src: "/vagrant/{{ item }}"
+    dest: /var/lib/kubernetes
+    remote_src: yes
+  with_items:
+    - certificates/ca.pem
+    - certificates/ca-key.pem
+    - certificates/kubernetes-key.pem
+    - certificates/kubernetes.pem
+    - certificates/service-account-key.pem
+    - certificates/service-account.pem
+    - encryption/encryption-config.yaml
+
+- name: create api-server config
+  template:
+    src: kube-apiserver.service.j2
+    dest: /etc/systemd/system/kube-apiserver.service
+
+- name: copy kube-controller-manager.kubeconfig
+  copy:
+    src: /vagrant/configurationfiles/kube-controller-manager.kubeconfig
+    dest: /var/lib/kubernetes
+    remote_src: yes
+
+- name: copy kube-controller-manager.service
+  copy:
+    src: kube-controller-manager.service
+    dest: /etc/systemd/system
+
+- name: copy kube-scheduler.kubeconfig
+  copy:
+    src: /vagrant/configurationfiles/kube-scheduler.kubeconfig
+    dest: /var/lib/kubernetes
+    remote_src: yes
+
+- name: copy kube-scheduler.yaml
+  copy:
+    src: kube-scheduler.yaml
+    dest: /etc/kubernetes/config
+
+- name: copy kube-scheduler.service
+  copy:
+    src: kube-scheduler.service
+    dest: /etc/systemd/system
+
+- name: start controller services
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+
+# waaaat... really? don't think we need that
+- name: install nginx
+  apt:
+    name: nginx
+
+- name: copy kubernetes.default.svc.cluster.local
+  copy:
+    src: kubernetes.default.svc.cluster.local
+    dest: /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
+
+- name: link to kubernetes.default.svc.cluster.local
+  file:
+    path: /etc/nginx/sites-enabled/kubernetes.default.svc.cluster.local
+    src: /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
+    state: link
+
+- name: ensure nginx service is installed and restarted
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
+
+- name: allow all access to tcp port 80
+  ufw:
+    rule: allow
+    port: 80
+    proto: tcp

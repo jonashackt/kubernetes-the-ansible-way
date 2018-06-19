@@ -33,7 +33,7 @@
     - { prefix: 'system:', name: kube-proxy }
     - { prefix: 'system:', name: kube-scheduler }
     - { prefix: '', name: kubernetes }
-    - { prefix: '', name: service-accounts }
+    - { prefix: '', name: service-account }
 
 - name: generate ca keys
   shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
@@ -57,7 +57,7 @@
     - kube-controller-manager
     - kube-proxy
     - kube-scheduler
-    - service-accounts
+    - service-account
 
 - name: generate Kubelet Client Certificates
   shell:
@@ -99,3 +99,4 @@
 
   # Distribute the Client and Server Certificates
   # is already done via Vagrant (/vagrant/certificates)
+  
