@@ -45,3 +45,17 @@
     state: restarted
     daemon_reload: yes
     enabled: yes
+
+- name: verify ectd cluster
+  shell: |
+    etcdctl member list \
+      --endpoints=https://127.0.0.1:2379 \
+      --cacert=/etc/etcd/ca.pem \
+      --cert=/etc/etcd/kubernetes.pem \
+      --key=/etc/etcd/kubernetes-key.pem
+  environment:
+    ETCDCTL_API: 3
+  register: result
+  until: result.stdout.find("started") != -1
+  retries: 5
+  delay: 10
