@@ -51,13 +51,17 @@ def provision(machine)
 end
 
 def machine_ip(type, index)
-    base_ip = {
-        :controller => '172.16.2.1',
-        :worker => '172.16.2.10',
-        :client => '172.16.2.20'
+    network = '172.16.2'
+
+    type_offsets = {
+        :controller => 10,
+        :worker => 100,
+        :client => 200
     }
 
-    "#{base_ip[type]}#{index}"
+    last_ip_part = type_offsets[type] + index
+
+    "#{network}.#{last_ip_part}"
 end
 
 def machine_name(type, index)
