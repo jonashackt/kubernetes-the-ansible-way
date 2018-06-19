@@ -90,7 +90,7 @@
       -ca=ca.pem \
       -ca-key=ca-key.pem \
       -config=/opt/cfssl-config/ca-config.json \
-      -hostname=10.32.0.1,{{ internal_ips }},{{ kubernetes_public_address }},127.0.0.1,kubernetes.default \
+      -hostname=10.32.0.1,{{ internal_ips }},{{ kubernetes_public_address }},client-0.k8s,127.0.0.1,kubernetes.default \
       -profile=kubernetes \
       /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes"
   args:
