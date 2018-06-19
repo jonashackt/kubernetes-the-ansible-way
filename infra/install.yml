@@ -5,6 +5,14 @@
   roles:
     - apt-updates
 
+- hosts: client
+  become: yes
+  roles:
+    - certificates
+    - controller-lb
+    - configurationfiles
+    - encryption
+
 - hosts: k8s-node
   become: yes
   roles:
@@ -16,11 +24,3 @@
     - etcd
 
 - hosts: worker
-
-- hosts: client
-  become: yes
-  roles:
-    - certificates
-    - controller-lb
-    - configurationfiles
-    - encryption
