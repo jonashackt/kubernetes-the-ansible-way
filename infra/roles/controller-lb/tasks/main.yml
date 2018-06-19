@@ -18,8 +18,8 @@
     state: restarted
     enabled: yes
 
-- name: allow all access to tcp port 443
+- name: allow all access to tcp port 6443
   ufw:
     rule: allow
-    port: 443
+    port: 6443
     proto: tcp
