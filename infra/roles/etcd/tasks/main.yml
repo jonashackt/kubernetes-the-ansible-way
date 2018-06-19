@@ -3,6 +3,7 @@
     src: https://github.com/coreos/etcd/releases/download/v3.3.5/etcd-v3.3.5-linux-amd64.tar.gz
     remote_src: yes
     dest: /tmp
+    creates: /tmp/etcd-v3.3.5-linux-amd64.tar.gz
 
 - name: install etcd
   copy:
