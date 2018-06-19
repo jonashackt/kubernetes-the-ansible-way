@@ -14,6 +14,3 @@ worker
 
 [client]
 client-0        ansible_host=client-0.k8s
-
-[all:vars]
-ansible_python_interpreter=/usr/bin/python3

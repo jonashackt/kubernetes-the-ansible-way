@@ -1,5 +1,7 @@
 - hosts: all
   become: yes
+  vars:
+    kubernetes_public_address: 172.16.2.201
   roles:
     - apt-updates
 
@@ -17,3 +19,4 @@
   roles:
     - certificates
     - controller-lb
+    - configurationfiles

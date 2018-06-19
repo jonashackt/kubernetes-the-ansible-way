@@ -1,3 +1,4 @@
+# This implements https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-certificate-authority.md
 - name: install cfssl
   apt:
     name: golang-cfssl
@@ -81,9 +82,12 @@
       -ca=ca.pem \
       -ca-key=ca-key.pem \
       -config=/opt/cfssl-config/ca-config.json \
-      -hostname=10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,172.16.2.1,172.16.2.10,172.16.2.11,172.16.2.12,172.16.2.1,127.0.0.1,kubernetes.default \
+      -hostname=10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,{{ kubernetes_public_address }},127.0.0.1,kubernetes.default \
       -profile=kubernetes \
       /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes'
   args:
     chdir: /vagrant/certificates
     creates: "/vagrant/certificates/kubernetes-key.pem"
+
+  # Distribute the Client and Server Certificates
+  # is already done via Vagrant (/vagrant/certificates)

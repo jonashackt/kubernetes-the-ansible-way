@@ -1,0 +1,8 @@
+kubernetes_components:
+  - { name: worker-0, server: "{{ kubernetes_public_address}}" }
+  - { name: worker-1, server: "{{ kubernetes_public_address}}" }
+  - { name: worker-2, server: "{{ kubernetes_public_address}}" }
+  - { name: kube-proxy, server: "{{ kubernetes_public_address}}" }
+  - { name: kube-controller-manager, server: '127.0.0.1' }
+  - { name: kube-scheduler, server: '127.0.0.1' }
+  - { name: admin, server: '127.0.0.1' }

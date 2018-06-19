@@ -2,6 +2,7 @@
 *.log
 *.retry
 infra/certificates
+infra/configurationfiles
 
 *.iml
 .idea
