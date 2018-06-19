@@ -74,6 +74,7 @@
     - kube-controller-manager
     - kube-scheduler
 
+# works without parameter kubeconfig: kubectl get componentstatuses
 - name: verify k8s cluster
   shell: kubectl get componentstatuses --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
   register: result
