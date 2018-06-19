@@ -8,7 +8,7 @@
   when: inventory_hostname == "controller-0"
 
 - name: apply rbac
-  shell: "kubectl create --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f {{ item }}"
+  shell: "kubectl apply --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f {{ item }}"
   with_items:
     - /etc/kubernetes/config/rbac-cluster-role.yaml
     - /etc/kubernetes/config/rbac-cluster-role-binding.yaml
