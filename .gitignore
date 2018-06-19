@@ -3,6 +3,7 @@
 *.retry
 infra/certificates
 infra/configurationfiles
+infra/encryption
 
 *.iml
 .idea

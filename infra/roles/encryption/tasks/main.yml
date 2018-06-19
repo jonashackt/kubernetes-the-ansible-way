@@ -1,0 +1,14 @@
+- name: create encryption key
+  shell: head -c 32 /dev/urandom | base64
+  register: encryption_key
+
+- name: ensure /vagrant/encryption exist
+  file:
+    path: /vagrant/encryption
+    state: directory
+    mode: 0755
+
+- name: create encryption config
+  template:
+    src: encryption-config.yaml.j2
+    dest: /vagrant/encryption/encryption-config.yaml
