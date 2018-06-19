@@ -1,3 +1,25 @@
 - name: install nginx
   apt:
     name: nginx
+
+- name: copy nginx.conf
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+
+- name: copy passthrough.conf
+  copy:
+    src: passthrough.conf
+    dest: /etc/nginx/passthrough.conf
+
+- name: ensure nginx service is installed and restarted
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
+
+- name: allow all access to tcp port 443
+  ufw:
+    rule: allow
+    port: 443
+    proto: tcp
