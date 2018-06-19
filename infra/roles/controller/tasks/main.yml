@@ -87,4 +87,3 @@
   debug:
     msg: "{{ result.stdout_lines }}"
   when: inventory_hostname == 'controller-2'
-
