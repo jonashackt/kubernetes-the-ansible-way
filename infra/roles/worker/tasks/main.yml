@@ -59,7 +59,6 @@
   with_items:
     - { src: config.toml, dest: /etc/containerd/config.toml }
     - { src: containerd.service, dest: /etc/systemd/system/containerd.service }
-    - { src: kube-proxy.service, dest: /etc/systemd/system/kube-proxy.service }
 
 - name: templates
   template:
@@ -69,6 +68,7 @@
     - { src: kubelet-config.yaml.j2, dest: /var/lib/kubelet/kubelet-config.yaml }
     - { src: kube-proxy-config.yaml.j2, dest: /var/lib/kube-proxy/kube-proxy-config.yaml }
     - { src: kubelet.service.j2, dest: /etc/systemd/system/kubelet.service }
+    - { src: kube-proxy.service, dest: /etc/systemd/system/kube-proxy.service }
 
 - name: start worker services
   systemd:

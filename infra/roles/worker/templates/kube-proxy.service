@@ -4,7 +4,9 @@ Documentation=https://github.com/kubernetes/kubernetes
 
 [Service]
 ExecStart=/usr/local/bin/kube-proxy \
-  --config=/var/lib/kube-proxy/kube-proxy-config.yaml
+  --cluster-cidr={{ kubernetes_cluster_cidr }} \
+  --config=/var/lib/kube-proxy/kube-proxy-config.yaml \
+  --hostname-override {{ inventory_hostname }}.k8s
 Restart=on-failure
 RestartSec=5
 
