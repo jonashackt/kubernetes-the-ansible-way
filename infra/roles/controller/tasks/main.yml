@@ -42,10 +42,10 @@
     dest: /var/lib/kubernetes
     remote_src: yes
 
-- name: copy kube-controller-manager.service
-  copy:
-    src: kube-controller-manager.service
-    dest: /etc/systemd/system
+- name: template kube-controller-manager.service
+  template:
+    src: kube-controller-manager.service.j2
+    dest: /etc/systemd/system/kube-controller-manager.service
 
 - name: copy kube-scheduler.kubeconfig
   copy:

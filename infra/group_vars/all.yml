@@ -1,5 +1,6 @@
 ansible_python_interpreter: /usr/bin/python3
 
 kubernetes_public_address: 172.16.2.200
+kubernetes_pod_cidr: 10.200.0.0
 
 ansible_user: vagrant
