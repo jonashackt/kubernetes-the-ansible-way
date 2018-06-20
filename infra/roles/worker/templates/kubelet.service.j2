@@ -14,7 +14,6 @@ ExecStart=/usr/local/bin/kubelet \
   --network-plugin=cni \
   --register-node=true \
   --allow-privileged \
-  --node-name {{ inventory_hostname }}.k8s
   --v=2
 Restart=on-failure
 RestartSec=5

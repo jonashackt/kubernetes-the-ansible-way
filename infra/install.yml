@@ -13,11 +13,6 @@
     - configurationfiles
     - encryption
 
-- hosts: k8s-node
-  become: yes
-  roles:
-    - docker
-
 - hosts: controller
   become: yes
   roles:

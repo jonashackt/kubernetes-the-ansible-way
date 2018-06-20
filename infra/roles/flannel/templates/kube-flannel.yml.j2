@@ -73,7 +73,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "{{ kubernetes_pod_cidr }}/16",
+      "Network": "{{ kubernetes_cluster_cidr }}",
       "Backend": {
         "Type": "vxlan"
       }
