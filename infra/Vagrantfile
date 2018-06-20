@@ -88,10 +88,10 @@ def define_resources(name, machine)
         vb.name = name
         if OS.linux?
           vb.memory = 4096
-          vb.cpus = 1
+          vb.cpus = 2
         else
           vb.memory = 768
-          vb.cpus = 2
+          vb.cpus = 1
         end
     end
 end
