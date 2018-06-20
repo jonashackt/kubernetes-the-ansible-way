@@ -1,0 +1,12 @@
+- name: ensure directories exist
+  file:
+    path: /opt/flannel
+    state: directory
+
+- name: template kube-flannel.yml
+  template:
+    src: kube-flannel.yml.j2
+    dest: /opt/flannel/kube-flannel.yml
+
+- name: apply flannel as DaemonSet
+  shell: kubectl apply -f /opt/flannel/kube-flannel.yml

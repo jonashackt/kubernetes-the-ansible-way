@@ -17,5 +17,15 @@ see https://blog.docker.com/2017/08/what-is-containerd-runtime/
 
 https://kubernetes.io/blog/2018/05/24/kubernetes-containerd-integration-goes-ga/
 
+# flannel
+
+"flannel is a virtual network that attaches IP addresses to containers" 
+
+https://coreos.com/flannel/docs/latest/kubernetes.html
+
+
+"The network in the flannel configuration should match the pod network CIDR."
+
+flannel will be deployed to worker: " deploy the flannel pod on each Node"
 
 [0]: https://kubernetes.io/docs/concepts/overview/components/

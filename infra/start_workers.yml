@@ -15,3 +15,8 @@
     - name: Kelly said so
       debug:
         msg: "{{ result.stdout_lines }}"
+
+- hosts: controller-0
+  become: yes
+  roles:
+    - { role: flannel, tags: flannel }
