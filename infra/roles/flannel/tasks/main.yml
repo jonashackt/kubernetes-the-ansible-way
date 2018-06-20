@@ -9,8 +9,9 @@
     dest: /opt/flannel/kube-flannel.yml
 
 - name: delete flannel DaemonSet
-  shell: kubectl delete daemonset kube-flannel-ds --namespace kube-system
+  shell: kubectl delete -f /opt/flannel/kube-flannel.yml
   register: delete_flannel_result
+  ignore_errors: true
 
 - name: Result of delete flannel DaemonSet
   debug:

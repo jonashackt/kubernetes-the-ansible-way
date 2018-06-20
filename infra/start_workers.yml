@@ -20,3 +20,18 @@
   become: yes
   roles:
     - { role: flannel, tags: flannel }
+
+- hosts: worker-0
+  tasks:
+    - name: Verify if flannel is added as network interface
+      shell: ip addr
+      register: ip_addr_result
+      until: ip_addr_result.stdout.find("flannel.1") != -1
+      retries: 5
+      delay: 10
+      tags: flannel
+
+    - name: Kelly didnt say so, Motherf****
+      debug:
+        msg: "{{ ip_addr_result.stdout_lines }}"
+      tags: flannel
