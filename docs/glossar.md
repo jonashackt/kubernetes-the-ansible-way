@@ -15,6 +15,7 @@ see https://blog.docker.com/2017/08/what-is-containerd-runtime/
 
 ![containerdoverview](https://i0.wp.com/blog.docker.com/wp-content/uploads/974cd631-b57e-470e-a944-78530aaa1a23-1.jpg?w=906&ssl=1)
 
+https://kubernetes.io/blog/2018/05/24/kubernetes-containerd-integration-goes-ga/
 
 
 [0]: https://kubernetes.io/docs/concepts/overview/components/

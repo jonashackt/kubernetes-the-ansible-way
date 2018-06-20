@@ -1,6 +1,6 @@
 - name: download controller binaries
   get_url:
-    url: "https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/{{ item }}"
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
     dest: "/usr/local/bin/{{ item }}"
     mode: 0755
   with_items:
