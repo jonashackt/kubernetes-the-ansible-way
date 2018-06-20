@@ -1,0 +1,42 @@
+- name: install packages
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - socat
+    - conntrack
+    - ipset
+
+- name: create installation directories
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/cni/net.d 
+    - /opt/cni/bin 
+    - /var/lib/kubelet 
+    - /var/lib/kube-proxy 
+    - /var/lib/kubernetes 
+    - /var/run/kubernetes
+
+- name: download worker binaries
+  get_url:
+    url: "{{ item.src }}"
+    dest: "/usr/local/bin/{{ item.name }}"
+    mode: 0755
+  with_items:
+    - { src: 'https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/kube-proxy', name: kube-proxy }
+    - { src: 'https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/kubectl', name: kubectl }
+    - { src: 'https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/kubelet', name: kubelet }
+    - { src: 'https://storage.googleapis.com/kubernetes-the-hard-way/runsc', name: runsc }
+    - { src: 'https://github.com/opencontainers/runc/releases/download/v1.0.0-rc5/runc.amd64', name: runc }
+
+- name: download worker tars
+  unarchive:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+    creates: "{{ item.dest }}/{{ item.bin_name }}"
+  with_items:
+    - { src: 'https://github.com/kubernetes-incubator/cri-tools/releases/download/v1.0.0-beta.0/crictl-v1.0.0-beta.0-linux-amd64.tar.gz', dest: /usr/local/bin, bin_name: crictl }
+    - { src: 'https://github.com/containernetworking/plugins/releases/download/v0.6.0/cni-plugins-amd64-v0.6.0.tgz', dest: /opt/cni/bin, bin_name: cni-plugins }
+    - { src: 'https://github.com/containerd/containerd/releases/download/v1.1.0/containerd-1.1.0.linux-amd64.tar.gz', dest: /, bin_name: containerd}
