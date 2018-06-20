@@ -1,0 +1,28 @@
+- name: ensure directories exist
+  file:
+    path: /opt/kubedns
+    state: directory
+
+- name: copy kube-dns.yaml
+  copy:
+    src: kube-dns.yaml
+    dest: /opt/kubedns/kube-dns.yaml
+
+- name: apply kube-dns Service, ServiceAccount, ConfigMap, Deployment
+  shell: kubectl apply -f /opt/kubedns/kube-dns.yaml
+  register: apply_kubedns_result
+
+- name: Result of apply kube-dns
+  debug:
+    msg: "{{ apply_kubedns_result.stdout_lines }}"
+
+- name: Verify kube-dns configuration
+  shell: kubectl get pods -l k8s-app=kube-dns -n kube-system
+  register: kubedns_result
+  until: kubedns_result.stdout.find("Running") != -1
+  retries: 5
+  delay: 10
+
+- name: Kelly said so
+  debug:
+    msg: "{{ kubedns_result.stdout_lines }}"

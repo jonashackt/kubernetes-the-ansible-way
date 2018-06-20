@@ -35,3 +35,8 @@
       debug:
         msg: "{{ ip_addr_result.stdout_lines }}"
       tags: flannel
+
+- hosts: controller-0
+  become: yes
+  roles:
+    - { role: kubedns, tags: kubedns }
