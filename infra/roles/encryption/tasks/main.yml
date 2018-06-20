@@ -1,6 +1,7 @@
 - name: create encryption key
   shell: head -c 32 /dev/urandom | base64
   register: encryption_key
+  creates: /vagrant/encryption/encryption-config.yaml
 
 - name: ensure /vagrant/encryption exist
   file:
