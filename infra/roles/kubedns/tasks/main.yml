@@ -1,3 +1,4 @@
+# see https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/12-dns-addon.md
 - name: ensure directories exist
   file:
     path: /opt/kubedns
@@ -16,6 +17,7 @@
   debug:
     msg: "{{ apply_kubedns_result.stdout_lines }}"
 
+# Verification steps
 - name: Verify kube-dns configuration
   shell: kubectl get pods -l k8s-app=kube-dns -n kube-system
   register: kubedns_result
@@ -26,3 +28,14 @@
 - name: Kelly said so
   debug:
     msg: "{{ kubedns_result.stdout_lines }}"
+
+- name: Create a busybox deployment
+  shell: kubectl run busybox --image=busybox --command -- sleep 3600
+
+- name: Create a busybox deployment
+  shell: kubectl get pods -l run=busybox
+  register: busybox_result
+
+- name: get pods output
+  debug:
+    msg: "{{ busybox_result.stdout_lines }}"
