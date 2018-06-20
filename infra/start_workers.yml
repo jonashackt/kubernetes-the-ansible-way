@@ -2,3 +2,16 @@
   become: yes
   roles:
     - worker
+
+- hosts: controller-0
+  tasks:
+    - name: verify workers
+      shell: kubectl get nodes --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
+      register: result
+      until: result.stdout.find("Ready") != -1
+      retries: 5
+      delay: 10
+
+    - name: Kelly said so
+      debug:
+        msg: "{{ result.stdout_lines }}"

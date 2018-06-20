@@ -17,6 +17,7 @@
     - /var/lib/kube-proxy 
     - /var/lib/kubernetes 
     - /var/run/kubernetes
+    - /etc/containerd/
 
 - name: download worker binaries
   get_url:
@@ -40,3 +41,46 @@
     - { src: 'https://github.com/kubernetes-incubator/cri-tools/releases/download/v1.0.0-beta.0/crictl-v1.0.0-beta.0-linux-amd64.tar.gz', dest: /usr/local/bin, creates: crictl }
     - { src: 'https://github.com/containernetworking/plugins/releases/download/v0.6.0/cni-plugins-amd64-v0.6.0.tgz', dest: /opt/cni/bin, creates: flannel }
     - { src: 'https://github.com/containerd/containerd/releases/download/v1.1.0/containerd-1.1.0.linux-amd64.tar.gz', dest: /, creates: bin/containerd}
+
+- name: copy certificates & configurationfiles
+  copy:
+    src: "/vagrant/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+  with_items:
+    - { src: "certificates/{{ inventory_hostname }}-key.pem", dest: /var/lib/kubelet }
+    - { src: "certificates/{{ inventory_hostname }}.pem", dest: /var/lib/kubelet }
+    - { src: "configurationfiles/{{ inventory_hostname }}.kubeconfig", dest: /var/lib/kubelet/kubeconfig }
+    - { src: "certificates/ca.pem", dest: /var/lib/kubernetes }
+    - { src: "configurationfiles/kube-proxy.kubeconfig", dest: /var/lib/kube-proxy/kubeconfig }
+
+- name: create 99-loopback.conf, config.toml, containerd.service
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: 99-loopback.conf, dest: /etc/cni/net.d/99-loopback.conf }
+    - { src: config.toml, dest: /etc/containerd/config.toml }
+    - { src: containerd.service, dest: /etc/systemd/system/containerd.service }
+    - { src: kubelet.service, dest: /etc/systemd/system/kubelet.service }
+    - { src: kube-proxy.service, dest: /etc/systemd/system/kube-proxy.service }
+
+- name: template /etc/cni/net.d/10-bridge.conf
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: 10-bridge.conf.j2, dest: /etc/cni/net.d/10-bridge.conf }
+    - { src: kubelet-config.yaml.j2, dest: /var/lib/kubelet/kubelet-config.yaml }
+    - { src: kube-proxy-config.yaml.j2, dest: /var/lib/kube-proxy/kube-proxy-config.yaml }
+
+- name: start worker services
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - containerd
+    - kubelet
+    - kube-proxy

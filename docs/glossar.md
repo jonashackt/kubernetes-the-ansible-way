@@ -9,6 +9,11 @@
 * kubelet: An agent that runs on each node in the cluster. It makes sure that containers are running in a pod
 * kube-proxy: enables the Kubernetes service abstraction by maintaining network rules on the host and performing connection forwarding.
 
+# containerd
+
+see https://blog.docker.com/2017/08/what-is-containerd-runtime/
+
+![containerdoverview](https://i0.wp.com/blog.docker.com/wp-content/uploads/974cd631-b57e-470e-a944-78530aaa1a23-1.jpg?w=906&ssl=1)
 
 
 
