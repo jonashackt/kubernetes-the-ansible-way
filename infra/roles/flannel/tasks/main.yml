@@ -8,5 +8,18 @@
     src: kube-flannel.yml.j2
     dest: /opt/flannel/kube-flannel.yml
 
+- name: delete flannel DaemonSet
+  shell: kubectl delete daemonset kube-flannel-ds --namespace kube-system
+  register: delete_flannel_result
+
+- name: Result of delete flannel DaemonSet
+  debug:
+    msg: "{{ delete_flannel_result.stdout_lines }}"
+
 - name: apply flannel as DaemonSet
   shell: kubectl apply -f /opt/flannel/kube-flannel.yml
+  register: apply_flannel_result
+
+- name: Result of apply flannel DaemonSet
+  debug:
+    msg: "{{ apply_flannel_result.stdout_lines }}"
