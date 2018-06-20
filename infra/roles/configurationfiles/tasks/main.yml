@@ -12,40 +12,9 @@
   with_items:
     - /vagrant/configurationfiles
 
-- name: Generate a kubeconfig file Step 1 - kubectl config set-cluster
-  shell:
-   'kubectl config set-cluster kubernetes-the-hard-way \
-        --certificate-authority=/vagrant/certificates/ca.pem \
-        --embed-certs=true \
-        --server=https://{{ item.server }}:6443 \
-        --kubeconfig={{ item.name }}.kubeconfig'
-  args:
-    chdir: /vagrant/configurationfiles
-  with_items: "{{ kubernetes_components }}"
-
-- name: Generate a kubeconfig file Step 2 - kubectl config set-credentials
-  shell:
-   'kubectl config set-credentials system:node:{{ item.name }} \
-        --client-certificate=/vagrant/certificates/{{ item.name }}.pem \
-        --client-key=/vagrant/certificates/{{ item.name }}-key.pem \
-        --embed-certs=true \
-        --kubeconfig={{ item.name }}.kubeconfig'
-  args:
-    chdir: /vagrant/configurationfiles
-  with_items: "{{ kubernetes_components }}"
-
-- name: Generate a kubeconfig file Step 3 - kubectl config set-context
-  shell:
-   'kubectl config set-context default \
-        --cluster=kubernetes-the-hard-way \
-        --user=system:node:{{ item.name }} \
-        --kubeconfig={{ item.name }}.kubeconfig'
-  args:
-    chdir: /vagrant/configurationfiles
-  with_items: "{{ kubernetes_components }}"
-
-- name: Generate a kubeconfig file Step 4 - kubectl config use-context
-  shell: "kubectl config use-context default --kubeconfig={{ item.name }}.kubeconfig"
-  args:
-    chdir: /vagrant/configurationfiles
+# Represents the files created with `kubectl config`
+- name: create kubeconfig files
+  template:
+    src: kubeconfig.yaml.j2
+    dest: /vagrant/configurationfiles/{{ item.name }}.kubeconfig
   with_items: "{{ kubernetes_components }}"
