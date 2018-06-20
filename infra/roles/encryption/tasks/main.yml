@@ -1,4 +1,4 @@
-- name: Check that the somefile.conf exists
+- name: Check that the encryption-config.yaml exists
   stat:
     path: /vagrant/encryption/encryption-config.yaml
   register: stat_result
