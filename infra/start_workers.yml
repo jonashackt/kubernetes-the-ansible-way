@@ -1,8 +1,8 @@
 - hosts: worker
   become: yes
   roles:
-    - flannel
     - worker
+    - flannel
 
 - hosts: controller-0
   tasks:
