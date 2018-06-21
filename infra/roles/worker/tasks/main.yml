@@ -11,9 +11,9 @@
     state: directory
     path: "{{ item }}"
   with_items:
-    - /var/lib/kubelet 
-    - /var/lib/kube-proxy 
-    - /var/lib/kubernetes 
+    - /var/lib/kubelet
+    - /var/lib/kube-proxy
+    - /var/lib/kubernetes
     - /var/run/kubernetes
 
 - name: download worker binaries
@@ -34,8 +34,6 @@
     creates: "{{ item.dest }}/{{ item.creates }}"
   with_items:
     - { src: 'https://github.com/kubernetes-incubator/cri-tools/releases/download/v1.0.0-beta.0/crictl-v1.0.0-beta.0-linux-amd64.tar.gz', dest: /usr/local/bin, creates: crictl }
-    - { src: 'https://github.com/containernetworking/plugins/releases/download/v0.6.0/cni-plugins-amd64-v0.6.0.tgz', dest: /opt/cni/bin, creates: flannel }
-    - { src: 'https://github.com/containerd/containerd/releases/download/v1.1.0/containerd-1.1.0.linux-amd64.tar.gz', dest: /, creates: bin/containerd}
 
 - name: copy certificates & configurationfiles
   copy:

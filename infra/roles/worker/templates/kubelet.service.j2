@@ -1,8 +1,8 @@
 [Unit]
 Description=Kubernetes Kubelet
 Documentation=https://github.com/kubernetes/kubernetes
-After=containerd.service
-Requires=containerd.service
+After=docker.service
+Requires=docker.service
 
 [Service]
 ExecStart=/usr/local/bin/kubelet \
@@ -10,11 +10,9 @@ ExecStart=/usr/local/bin/kubelet \
   --container-runtime=docker \
   --image-pull-progress-deadline=2m \
   --kubeconfig=/var/lib/kubelet/kubeconfig \
-  --network-plugin=cni \
   --node-ip={{ hostvars[inventory_hostname]['ansible_enp0s8']['ipv4']['address'] }} \
   --register-node=true \
   --allow-privileged \
-  --hostname-override {{ inventory_hostname }}.k8s \
   --v=2
 Restart=on-failure
 RestartSec=5

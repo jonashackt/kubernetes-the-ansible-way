@@ -1,0 +1,9 @@
+etcd_net_config: > 
+  {
+    "Network": "10.200.0.0/16", 
+    "SubnetLen": 24, 
+    "Backend": {
+        "Type": "vxlan", 
+        "VNI": 1
+    }
+  }

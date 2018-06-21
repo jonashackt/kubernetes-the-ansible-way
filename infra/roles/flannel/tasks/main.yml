@@ -1,26 +1,34 @@
-- name: ensure directories exist
-  file:
-    path: /opt/flannel
-    state: directory
+- name: install package
+  apt:
+    name: flannel
 
-- name: template kube-flannel.yml
+- name: Set flannel network conf on etcd
+  uri:
+    client_cert: /var/lib/kubelet/{{ ansible_hostname }}.pem
+    client_key: /var/lib/kubelet/{{ ansible_hostname }}-key.pem
+    validate_certs: no
+    url: https://controller-0.k8s:2379/v2/keys/kubernetes-cluster/network/config
+    body: "value={{ etcd_net_config }}"
+    status_code: 200,201
+    method: PUT
+    return_content: yes
+  run_once: true
+
+- name: Copy flannel systemd unit file
   template:
-    src: kube-flannel.yml.j2
-    dest: /opt/flannel/kube-flannel.yml
+    src: flannel.service.j2
+    dest: /lib/systemd/system/flannel.service
 
-- name: delete flannel DaemonSet
-  shell: kubectl delete -f /opt/flannel/kube-flannel.yml
-  register: delete_flannel_result
-  ignore_errors: true
+- name: restart flannel
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: flannel
+    state: restarted
 
-- name: Result of delete flannel DaemonSet
-  debug:
-    msg: "{{ delete_flannel_result.stdout_lines }}"
-
-- name: apply flannel as DaemonSet
-  shell: kubectl apply -f /opt/flannel/kube-flannel.yml
-  register: apply_flannel_result
-
-- name: Result of apply flannel DaemonSet
-  debug:
-    msg: "{{ apply_flannel_result.stdout_lines }}"
+- name: restart docker
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: docker
+    state: restarted

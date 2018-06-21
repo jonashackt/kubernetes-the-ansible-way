@@ -1,6 +1,7 @@
 - hosts: worker
   become: yes
   roles:
+    - flannel
     - worker
 
 - hosts: controller-0
@@ -16,7 +17,7 @@
       debug:
         msg: "{{ result.stdout_lines }}"
 
-- hosts: controller-0
+- hosts: controller
   become: yes
   roles:
     - { role: flannel, tags: network }
@@ -43,4 +44,4 @@
 - hosts: controller-0
   become: yes
   roles:
-    - { role: kubedns, tags: network }
+    - { role: coredns, tags: network }
