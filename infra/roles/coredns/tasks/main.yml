@@ -3,6 +3,11 @@
     src: coredns.yml
     dest: /opt/coredns.yml
 
+- name: delete previous coredns
+  shell: kubectl delete -f /opt/coredns.yml
+  run_once: yes
+  ignore_errors: true
+
 - name: deploy coredns
   shell: kubectl apply -f /opt/coredns.yml
   run_once: yes
