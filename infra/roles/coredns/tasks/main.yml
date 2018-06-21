@@ -11,3 +11,26 @@
 - name: deploy coredns
   shell: kubectl apply -f /opt/coredns.yml
   run_once: yes
+
+# Verification steps
+- name: Verify kube-dns configuration
+  shell: kubectl get pods -l k8s-app=coredns -n kube-system
+  register: coredns_result
+  until: coredns_result.stdout.find("Running") != -1
+  retries: 5
+  delay: 10
+
+- name: Kelly said so
+  debug:
+    msg: "{{ coredns_result.stdout_lines }}"
+
+- name: Create a busybox deployment
+  shell: kubectl run busybox --image=busybox --command -- sleep 3600
+
+- name: Create a busybox deployment
+  shell: kubectl get pods -l run=busybox
+  register: busybox_result
+
+- name: get pods output
+  debug:
+    msg: "{{ busybox_result.stdout_lines }}"
