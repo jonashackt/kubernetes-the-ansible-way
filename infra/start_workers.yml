@@ -17,7 +17,7 @@
       debug:
         msg: "{{ result.stdout_lines }}"
 
-- hosts: controller
+- hosts: worker
   become: yes
   roles:
     - { role: flannel, tags: network }
