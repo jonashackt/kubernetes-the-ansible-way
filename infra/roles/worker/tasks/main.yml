@@ -15,7 +15,6 @@
     - /var/lib/kube-proxy 
     - /var/lib/kubernetes 
     - /var/run/kubernetes
-    - /etc/containerd/
 
 - name: download worker binaries
   get_url:
@@ -26,8 +25,6 @@
     - { src: 'https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/kube-proxy', name: kube-proxy }
     - { src: 'https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/kubectl', name: kubectl }
     - { src: 'https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/kubelet', name: kubelet }
-    - { src: 'https://storage.googleapis.com/kubernetes-the-hard-way/runsc', name: runsc }
-    - { src: 'https://github.com/opencontainers/runc/releases/download/v1.0.0-rc5/runc.amd64', name: runc }
 
 - name: download worker tars
   unarchive:
@@ -52,14 +49,6 @@
     - { src: "certificates/ca.pem", dest: /var/lib/kubernetes }
     - { src: "configurationfiles/kube-proxy.kubeconfig", dest: /var/lib/kube-proxy/kubeconfig }
 
-- name: create 99-loopback.conf, config.toml, containerd.service
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - { src: config.toml, dest: /etc/containerd/config.toml }
-    - { src: containerd.service, dest: /etc/systemd/system/containerd.service }
-
 - name: templates
   template:
     src: "{{ item.src }}"
@@ -77,6 +66,5 @@
     enabled: yes
     daemon_reload: yes
   with_items:
-    - containerd
     - kubelet
     - kube-proxy

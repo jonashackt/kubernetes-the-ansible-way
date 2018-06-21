@@ -1,0 +1,32 @@
+- name: add Docker apt key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+  ignore_errors: true
+
+- name: add docker apt repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} edge"
+    update_cache: yes
+  become: true
+
+- name: install Docker apt package
+  apt:
+    pkg: docker-ce
+    state: latest
+    update_cache: yes
+  become: true
+
+- name: ensure Docker service is installed and restarted
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+
+- name: add vagrant user to docker group.
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+  become: true

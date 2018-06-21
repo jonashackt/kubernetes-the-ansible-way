@@ -19,3 +19,6 @@
     - etcd
 
 - hosts: worker
+  become: yes
+  roles:
+    - docker
