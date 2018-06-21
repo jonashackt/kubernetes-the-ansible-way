@@ -1,0 +1,39 @@
+# Run kuberctl to gather kubernetes nodes "facts"
+- name: Gather Kubernetes nodes facts
+  shell: kubectl get nodes --output=json
+  register: result
+
+- set_fact:
+    kubernetes_nodes: "{{ result.stdout | from_json }}"
+
+# Extract Pod addresses
+#   The following is an hack to extract the list of addresses from kubernetes facts,
+#   as Jinja2 doesn't support list comprehension (list flattening)
+- debug:
+    msg: "Extract Kubernetes node addresses"
+  with_flattened:
+    - "{{ kubernetes_nodes['items']|map(attribute='status')|map(attribute='addresses')|list }}"
+  register: node_addresses_tmp
+  no_log: true
+
+# Extract Node Addresses
+- set_fact:
+    kubernetes_nodes_addresses: "{{ node_addresses_tmp.results|map(attribute='item')|selectattr('type','equalto','InternalIP')|map(attribute='address')|list }}"
+
+# Extract Pod CIDRs
+- set_fact:
+    kubernetes_pod_cidrs: "{{ kubernetes_nodes['items']|map(attribute='spec')|map(attribute='podCIDR')|list }}"
+
+- debug:
+    msg:
+      - "Kubernetes node addresses: "
+      - "{{ kubernetes_nodes_addresses }}"
+      - "Pod CIDRs: "
+      - "{{ kubernetes_pod_cidrs }}"
+
+#- name: Verify that Kubernetes Node addresses are the same as our Vagrant box IPs
+#  debug:
+#    msg: "{{ item[0] }} has the correct IP {{ item[1] }}"
+#  with_nested:
+#    - "{{ groups['worker'] }}"
+#    - "{{ kubernetes_nodes_addresses }}"

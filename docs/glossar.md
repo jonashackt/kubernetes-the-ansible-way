@@ -42,7 +42,16 @@ flannel will be deployed to worker: " deploy the flannel pod on each Node"
 
 Trouble: https://github.com/coreos/flannel/blob/master/Documentation/troubleshooting.md#vagrant
 
-Solution: https://stackoverflow.com/a/48755233/4964553
+> Vagrant typically assigns two interfaces to all VMs. The first, for which all hosts are assigned the IP address 10.0.2.15, is for external traffic that gets NATed.
+  
+  This may lead to problems with flannel. By default, flannel selects the first interface on a host. This leads to all hosts thinking they have the same public IP address. To prevent this issue, pass the --iface eth1 flag to flannel so that the second interface is chosen.
 
+Solution: https://stackoverflow.com/a/48755233/4964553, add the following line:
+
+```
+  - --iface=enp0s8
+```
+
+in https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 [0]: https://kubernetes.io/docs/concepts/overview/components/
