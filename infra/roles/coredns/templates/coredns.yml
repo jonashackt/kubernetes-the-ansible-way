@@ -50,7 +50,7 @@ data:
         errors
         log
         health
-        kubernetes cluster.local 10.32.0.0/24 {{ kubernetes_cluster_cidr }}
+        kubernetes cluster.local {{ kubernetes_cluster_iprange }} {{ kubernetes_cluster_cidr }}
         proxy . /etc/resolv.conf
         cache 30
     }

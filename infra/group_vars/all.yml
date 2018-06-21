@@ -3,5 +3,6 @@ ansible_python_interpreter: /usr/bin/python3
 kubernetes_version: v1.10.2
 kubernetes_public_address: 172.16.2.200
 kubernetes_cluster_cidr: 10.200.0.0/16
+kubernetes_cluster_iprange: 10.32.0.0/24
 
 ansible_user: vagrant
