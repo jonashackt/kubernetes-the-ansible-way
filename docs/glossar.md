@@ -60,14 +60,53 @@ in https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-fl
 
 ##### Flannel with Docker
 
-We set `--ip-masq=false` inside the `docker.service`. Now with
+This is a good overview (from https://blog.laputa.io/kubernetes-flannel-networking-6a1cb1f8ec7c):
 
-https://github.com/kubernetes/kubernetes/issues/45459
+![network_overview](https://cdn-images-1.medium.com/max/1600/1*EFr8ohzABfStS7o9gGMYKw.png)
 
-we need to add the following to the `flannel.service.j2`:
+To achieve this, we need to install flanneld and then set the following inside the `docker.service.j2`:
+
+```
+EnvironmentFile=/run/flannel/subnet.env
+ExecStart=/usr/bin/dockerd \
+    --bip=${FLANNEL_SUBNET} \
+    --mtu=${FLANNEL_MTU} \
+    --iptables=false \
+    --ip-masq=false \
+    --ip-forward=true \
+    -H fd://
+```
+See the following links: 
+
+* https://kubernetes.io/docs/setup/scratch/#docker
+* https://docs.docker.com/install/linux/linux-postinstall/#configuring-remote-access-with-systemd-unit-file
+* https://coreos.com/flannel/docs/latest/flannel-config.html
+* https://icicimov.github.io/blog/kubernetes/Kubernetes-cluster-step-by-step-Part4/
+
+####### nslookup for kubernetes not working in kubedns / main.yml
+
+We set `--ip-masq=false` inside the `docker.service`. The problem is
+
+```
+vagrant@controller-0:~$ kubectl exec -i busybox-68654f944b-rgk5q -- nslookup kubernetes
+Server:    10.32.0.10
+```
+
+We need to add the following to the `flannel.service.j2` (kubeadm had the problem also https://github.com/kubernetes/kubernetes/issues/45459):
 
 ```
   -ip-masq
+```
+
+NOW the nslookup finally works:
+
+```
+vagrant@controller-0:~$ kubectl exec -i busybox-68654f944b-rgk5q -- nslookup kubernetes
+Server:    10.32.0.10
+Address 1: 10.32.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      kubernetes
+Address 1: 10.32.0.1 kubernetes.default.svc.cluster.local
 ```
 
 [0]: https://kubernetes.io/docs/concepts/overview/components/
