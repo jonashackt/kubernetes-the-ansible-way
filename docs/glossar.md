@@ -27,6 +27,10 @@ https://prefetch.net/blog/2018/01/20/generating-kubernetes-pod-cidr-routes-with-
 
 https://github.com/containernetworking/cni
 
+Which CNI-Provider to choose:
+
+https://chrislovecnm.com/kubernetes/cni/choosing-a-cni-provider/
+
 ### Flannel
 
 "flannel is a virtual network that attaches IP addresses to containers" 
