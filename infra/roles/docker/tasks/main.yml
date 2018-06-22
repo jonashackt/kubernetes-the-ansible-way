@@ -18,6 +18,11 @@
     update_cache: yes
   become: true
 
+- name: Copy Docker systemd unit file
+  template:
+    src: docker.service.j2
+    dest: /lib/systemd/system/docker.service
+
 - name: ensure Docker service is installed and restarted
   service:
     name: docker

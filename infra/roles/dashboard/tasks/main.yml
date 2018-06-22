@@ -1,0 +1,13 @@
+# see https://github.com/kubernetes/dashboard
+- name: ensure directories exist
+  file:
+    path: /opt/dashboard
+    state: directory
+
+- name: copy kubernetes-dashboard.yaml
+  copy:
+    src: kubernetes-dashboard.yaml
+    dest: /opt/dashboard/kubernetes-dashboard.yaml
+
+- name: apply dashboard Service, ServiceAccount, Deployment etc
+  shell: kubectl apply -f /opt/dashboard/kubernetes-dashboard.yaml
