@@ -2,7 +2,10 @@
 
 
 ## Commands
-* scutil --dns
+```bash
+# check dns configs on mac
+scutil --dns
+```
 
 
 ## Links
@@ -13,6 +16,7 @@
   * [Google Document by codecentric K8s GERMAN Team][3] 
   * [kubernetes by example][4] 
   * [Best practice by google][5] 
+  * [Tutorialspoint][6] 
 
 
 [0]: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
@@ -21,3 +25,4 @@
 [3]: https://docs.google.com/document/u/2/d/1nAQQNjoPzpzvZZhJk0wyKBqz9udgYZjzJgeRAjo6vU4/edit?usp=sharing
 [4]: http://kubernetesbyexample.com/
 [5]: https://medium.com/google-cloud/kubernetes-best-practices-season-one-11119aee1d10
+[6]: https://www.tutorialspoint.com/kubernetes/index.htm
