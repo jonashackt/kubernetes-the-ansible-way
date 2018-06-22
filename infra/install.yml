@@ -17,8 +17,3 @@
   become: yes
   roles:
     - etcd
-
-- hosts: worker
-  become: yes
-  roles:
-    - docker

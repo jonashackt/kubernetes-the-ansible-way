@@ -27,6 +27,7 @@
   service:
     name: docker
     state: restarted
+    daemon_reload: true
     enabled: yes
 
 - name: add vagrant user to docker group.

@@ -8,7 +8,14 @@
     client_key: /var/lib/kubelet/{{ ansible_hostname }}-key.pem
     validate_certs: no
     url: https://controller-0.k8s:2379/v2/keys/kubernetes-cluster/network/config
-    body: "value={{ etcd_net_config }}"
+    body:
+      'value={"Network": "{{ kubernetes_cluster_cidr }}",
+         "SubnetLen": 24,
+         "Backend": {
+             "Type": "vxlan",
+             "VNI": 1
+         }
+       }'
     status_code: 200,201
     method: PUT
     return_content: yes
@@ -26,9 +33,4 @@
     name: flannel
     state: restarted
 
-- name: restart docker
-  systemd:
-    daemon_reload: yes
-    enabled: yes
-    name: docker
-    state: restarted
+

@@ -1,9 +1,0 @@
-etcd_net_config: > 
-  {
-    "Network": "{{ kubernetes_cluster_cidr }}", 
-    "SubnetLen": 24, 
-    "Backend": {
-        "Type": "vxlan", 
-        "VNI": 1
-    }
-  }
