@@ -109,4 +109,17 @@ Name:      kubernetes
 Address 1: 10.32.0.1 kubernetes.default.svc.cluster.local
 ```
 
+### Where did we stop? (on 22. Juni 2018)
+
+We´ve reached every step till:
+
+https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/13-smoke-test.md#services
+
+The nginx did also work, but wasn´t completely coded in Ansible.
+
+Also the whole project structure has to be refactored into an "Ansible-Style".
+
+And the dashboard could´nt be accesses right away, only manually by Johannes with a port forwarding and tiller-deployment to retrieve the Token (key didn´t work).
+
+
 [0]: https://kubernetes.io/docs/concepts/overview/components/
