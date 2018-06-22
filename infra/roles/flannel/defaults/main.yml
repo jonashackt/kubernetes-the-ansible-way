@@ -1,6 +1,6 @@
 etcd_net_config: > 
   {
-    "Network": "10.200.0.0/16", 
+    "Network": "{{ kubernetes_cluster_cidr }}", 
     "SubnetLen": 24, 
     "Backend": {
         "Type": "vxlan", 
