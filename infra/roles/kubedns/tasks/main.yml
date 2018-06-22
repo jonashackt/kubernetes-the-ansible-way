@@ -56,11 +56,11 @@
 - debug:
     msg: "Pod name: {{ pod_name }}"
 
-#- name: Execute a DNS lookup for the kubernetes service inside the busybox pod
-#  shell: "kubectl exec -ti {{ pod_name }} -- nslookup kubernetes"
-#  register: pod_internal_nslookup
-#
-#- debug:
-#    msg:
-#      - "Pod internal nslookup result:"
-#      - "{{ pod_internal_nslookup.stdout_lines }}"
+- name: Execute a DNS lookup for the kubernetes service inside the busybox pod
+  shell: "kubectl exec -i {{ pod_name }} -- nslookup kubernetes"
+  register: pod_internal_nslookup
+
+- debug:
+    msg:
+      - "Pod internal nslookup result:"
+      - "{{ pod_internal_nslookup.stdout_lines }}"
