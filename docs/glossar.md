@@ -58,4 +58,16 @@ Solution: https://stackoverflow.com/a/48755233/4964553, add the following line:
 
 in https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
+##### Flannel with Docker
+
+We set `--ip-masq=false` inside the `docker.service`. Now with
+
+https://github.com/kubernetes/kubernetes/issues/45459
+
+we need to add the following to the `flannel.service.j2`:
+
+```
+  -ip-masq
+```
+
 [0]: https://kubernetes.io/docs/concepts/overview/components/
