@@ -44,4 +44,4 @@
 - hosts: controller-0
   become: yes
   roles:
-    - { role: coredns, tags: coredns }
+    - { role: kubedns, tags: kubedns }

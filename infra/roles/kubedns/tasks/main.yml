@@ -17,25 +17,50 @@
   debug:
     msg: "{{ apply_kubedns_result.stdout_lines }}"
 
-# Verification steps
-- name: Verify kube-dns configuration
-  shell: kubectl get pods -l k8s-app=kube-dns -n kube-system
-  register: kubedns_result
-  until: kubedns_result.stdout.find("Running") != -1
-  retries: 5
-  delay: 10
-
-- name: Kelly said so
-  debug:
-    msg: "{{ kubedns_result.stdout_lines }}"
+# Create first Kubernetes Pod
+- name: Delete busybox deployment, if already there
+  shell: kubectl delete deployment.apps/busybox -n default
+  ignore_errors: true
 
 - name: Create a busybox deployment
   shell: kubectl run busybox --image=busybox --command -- sleep 3600
 
-- name: Create a busybox deployment
+- name: Check if busybox deployment is running
   shell: kubectl get pods -l run=busybox
   register: busybox_result
+  until: busybox_result.stdout.find("Running") != -1
+  retries: 10
+  delay: 10
 
-- name: get pods output
+- name: Show busybox kubectl get output
   debug:
     msg: "{{ busybox_result.stdout_lines }}"
+
+- name: Gather Kubernetes nodes facts
+  shell: kubectl get pods -l run=busybox --output=json
+  register: pod
+
+- set_fact:
+    kubernetes_pod: "{{ pod.stdout | from_json }}"
+
+# Extract Pod result
+- debug:
+    msg: "Extract Kubernetes node addresses"
+  with_flattened:
+    - "{{ kubernetes_pod['items']|map(attribute='metadata')|map(attribute='name')|list }}"
+  register: pod_name_result
+
+- set_fact:
+    pod_name: "{{ pod_name_result.results[0].item }}"
+
+- debug:
+    msg: "Pod name: {{ pod_name }}"
+
+- name: Execute a DNS lookup for the kubernetes service inside the busybox pod
+  shell: "kubectl exec -ti {{ pod_name }} -- nslookup kubernetes"
+  register: pod_internal_nslookup
+
+- debug:
+    msg:
+      - "Pod internal nslookup result:"
+      - "{{ pod_internal_nslookup.stdout_lines }}"
