@@ -4,8 +4,8 @@
     path: /opt/kubedns
     state: directory
 
-- name: copy kube-dns.yaml
-  copy:
+- name: create kube-dns.yaml
+  template:
     src: kube-dns.yaml
     dest: /opt/kubedns/kube-dns.yaml
 
