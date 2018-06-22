@@ -22,7 +22,7 @@
 - hosts: worker
   become: yes
   roles:
-    - worker
+    - k8s-worker
 
 - hosts: controller-0
   tasks:
