@@ -15,7 +15,8 @@ ExecStart=/usr/bin/flannel \
   -etcd-endpoints={% for item in groups['controller'] %}https://{{ hostvars[item].ansible_host }}:2379{{ "," if not loop.last else ""}}{% endfor %} \
   -etcd-prefix=/kubernetes-cluster/network \
   -public-ip={{ hostvars[inventory_hostname]['ansible_enp0s8']['ipv4']['address'] }} \
-  -iface=enp0s8
+  -iface=enp0s8 \
+  -ip-masq
 Restart=on-failure
  
 [Install]
