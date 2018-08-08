@@ -25,6 +25,9 @@ Vagrant.configure("2") do |config|
                 vb.memory = 768
                 vb.cpus = 1
                 vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+                if Vagrant::Util::Platform.linux?
+                  machine.hostsupdater.aliases = [ "#{name}.k8s" ]
+                end
             end
         end
     end
