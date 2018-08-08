@@ -1,21 +1,3 @@
-module OS
-    def OS.windows?
-        (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
-    end
-
-    def OS.mac?
-        (/darwin/ =~ RUBY_PLATFORM) != nil
-    end
-
-    def OS.unix?
-        !OS.windows?
-    end
-
-    def OS.linux?
-        OS.unix? and not OS.mac?
-    end
-end
-
 Vagrant.configure("2") do |config|
     check_prerequisites
 
@@ -63,7 +45,7 @@ end
 def setup_dns(name, machine)
     machine.dns.tld = 'k8s'
     machine.vm.hostname = name
-    if OS.linux?
+    if Vagrant::Util::Platform.linux?
       machine.hostsupdater.aliases = [ "#{name}.k8s" ]
     end
     machine.vm.provider :virtualbox do |vb|
@@ -86,12 +68,7 @@ end
 def define_resources(name, machine)
     machine.vm.provider :virtualbox do |vb|
         vb.name = name
-        if OS.linux?
-          vb.memory = 2048
-          vb.cpus = 2
-        else
-          vb.memory = 768
-          vb.cpus = 1
-        end
+        vb.memory = 768
+        vb.cpus = 1
     end
 end
