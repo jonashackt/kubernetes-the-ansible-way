@@ -1,74 +1,31 @@
 Vagrant.configure("2") do |config|
-    check_prerequisites
-
     config.vm.box = "ubuntu/bionic64"
 
     machines = {
-        :controller => 3,
-        :worker => 3,
-        :client => 1
+        # master nodes
+        'master-0' => '172.16.2.10',
+        'master-1' => '172.16.2.11',
+        'master-2' => '172.16.2.12',
+        # worker nodes
+        'worker-0' => '172.16.2.100',
+        'worker-1' => '172.16.2.101',
+        'worker-2' => '172.16.2.102',
+        # init node to create certificates, configurationfiles, encryption and host inital LB
+        'init' => '172.16.2.200',
     }
 
-    machines.each do |type, count|
-        (0...count).each do |index|
-            config.vm.define machine_name(type, index) do |machine|
-                setup(type, index, machine)
+    machines.each do |name, ip|
+        config.vm.define name do |machine|
+            machine.vm.network "private_network", ip: ip
+            machine.dns.tld = 'k8s'
+            machine.vm.hostname = name
+
+            machine.vm.provider :virtualbox do |vb|
+                vb.name = name
+                vb.memory = 768
+                vb.cpus = 1
+                vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
             end
         end
-    end
-end
-
-def setup(type, index, machine)
-    machine.vm.network "private_network", ip: machine_ip(type, index)
-    setup_dns(machine_name(type, index), machine)
-    define_resources(machine_name(type, index), machine)
-end
-
-def machine_ip(type, index)
-    network = '172.16.2'
-
-    type_offsets = {
-        :controller => 10,
-        :worker => 100,
-        :client => 200
-    }
-
-    last_ip_part = type_offsets[type] + index
-
-    "#{network}.#{last_ip_part}"
-end
-
-def machine_name(type, index)
-    "#{type}-#{index}"
-end
-
-def setup_dns(name, machine)
-    machine.dns.tld = 'k8s'
-    machine.vm.hostname = name
-    if Vagrant::Util::Platform.linux?
-      machine.hostsupdater.aliases = [ "#{name}.k8s" ]
-    end
-    machine.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    end
-end
-
-def check_prerequisites
-    required_plugins = [
-        'vagrant-dns',
-        'vagrant-vbguest']
-
-    required_plugins.each do |plugin|
-        unless Vagrant.has_plugin?(plugin)
-            raise "Plugin #{plugin} is not installed"
-        end
-    end
-end
-
-def define_resources(name, machine)
-    machine.vm.provider :virtualbox do |vb|
-        vb.name = name
-        vb.memory = 768
-        vb.cpus = 1
     end
 end
