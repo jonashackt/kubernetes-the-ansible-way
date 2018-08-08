@@ -1,4 +1,4 @@
-- name: download controller binaries
+- name: download master component binaries
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
     dest: "/usr/local/bin/{{ item }}"
@@ -63,7 +63,7 @@
     src: kube-scheduler.service
     dest: /etc/systemd/system
 
-- name: start controller services
+- name: start master component services
   systemd:
     name: "{{ item }}"
     state: restarted

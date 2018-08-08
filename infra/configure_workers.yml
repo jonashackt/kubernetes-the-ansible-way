@@ -24,7 +24,7 @@
   roles:
     - k8s-worker
 
-- hosts: controller-0
+- hosts: master-0
   tasks:
     - name: verify workers
       shell: kubectl get nodes --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
@@ -37,16 +37,16 @@
       debug:
         msg: "{{ result.stdout_lines }}"
 
-- hosts: controller-0
+- hosts: master-0
   roles:
     - { role: verify-network, tags: network }
 
-- hosts: controller-0
+- hosts: master-0
   become: yes
   roles:
     - { role: kubedns, tags: kubedns }
 
-- hosts: controller-0
+- hosts: master-0
   become: yes
   roles:
     - { role: dashboard, tags: dashboard }

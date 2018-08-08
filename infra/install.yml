@@ -5,15 +5,15 @@
   roles:
     - apt-updates
 
-- hosts: client
+- hosts: init
   become: yes
   roles:
     - certificates
-    - controller-lb
+    - lb
     - configurationfiles
     - encryption
 
-- hosts: controller
+- hosts: master
   become: yes
   roles:
     - etcd
