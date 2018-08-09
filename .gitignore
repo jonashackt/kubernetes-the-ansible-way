@@ -1,9 +1,9 @@
 .vagrant
 *.log
 *.retry
-infra/certificates
-infra/configurationfiles
-infra/encryption
+/certificates/*
+/configurationfiles/*
+/encryption/*
 
 *.iml
 .idea

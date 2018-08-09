@@ -12,6 +12,31 @@ But we wanted to focus on different aspects:
 The origin of this repository was set by a team of [Johannes Barop](https://github.com/jbarop), [Frank Stibane](https://github.com/f-stibane), [Jan Müller](https://github.com/devpie), [Akhlaq Malik](https://github.com/imalik8088) & [Jonas Hecht](https://github.com/jonashackt) on a Kubernetes workshop in the [codecentric](https://github.com/codecentric)  Finca Mallorca in June 2018.
 
 
+## Prerequisites
+
+Install [Ansible](https://www.ansible.com/), [Vagrant](https://www.vagrantup.com/) and the following Plugins:
+ 
+* [vagrant-dns](https://github.com/BerlinVagrant/vagrant-dns)
+* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
+
+And then run `vagrant dns --install`.
+
+__Alternatively__, use the following scripts depending on your Host´s platform:
+
+
+```bash
+bash prepare.mac.bash
+#or
+bash prepare.arch.bash
+```
+
+Then do the usual:
+
+```bash
+vagrant up
+```
+
+
 # Glossar
 
 ![k8s-big-picture](https://res.cloudinary.com/dukp6c7f7/image/upload/f_auto,fl_lossy,q_auto/s3-ghost/2016/06/o7leok.png)
@@ -139,8 +164,6 @@ And the dashboard could´nt be accesses right away, only manually by Johannes wi
 
 
 
-# Arbitrary notes
-
 
 ## Commands
 ```bash
@@ -148,6 +171,14 @@ And the dashboard could´nt be accesses right away, only manually by Johannes wi
 scutil --dns
 ```
 
+```bash
+
+ansible --private-key=$(pwd)/.vagrant/machines/client-0/virtualbox/private_key client -i hosts -u vagrant -m setup
+
+# kube api server health checks
+curl --cacert certificates/ca.pem --key certificates/admin-key.pem --cert certificates/admin.pem https://client-0.k8s:6443/healthz
+
+```
 
 ## Links
 
