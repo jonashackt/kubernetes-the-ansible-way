@@ -13,8 +13,15 @@
     - /vagrant/configurationfiles
 
 # Represents the files created with `kubectl config`
-- name: create kubeconfig files
+- name: template all kubeconfig files
   template:
     src: kubeconfig.yaml.j2
     dest: /vagrant/configurationfiles/{{ item.name }}.kubeconfig
-  with_items: "{{ kubernetes_components }}"
+  with_items:
+    - { name: worker-0, server: "{{ kubernetes_public_address}}" }
+    - { name: worker-1, server: "{{ kubernetes_public_address}}" }
+    - { name: worker-2, server: "{{ kubernetes_public_address}}" }
+    - { name: kube-proxy, server: "{{ kubernetes_public_address}}" }
+    - { name: kube-controller-manager, server: '127.0.0.1' }
+    - { name: kube-scheduler, server: '127.0.0.1' }
+    - { name: admin, server: '127.0.0.1' }
