@@ -1,5 +1,6 @@
 - hosts: master
   become: yes
   roles:
+    - etcd
     - k8s-master
     - rbac
