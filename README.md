@@ -1,4 +1,8 @@
-# Kubernetes workshop (June 2018)
+# kubernetes-the-ansible-way
+Bootstrap Kubernetes the Ansible way on Everything (here: Vagrant). Inspired by Kelsey Hightower´s kubernetes-the-hard-way, but refactored to Infrastructure-as-Code.
+
+
+## from Kubernetes workshop (June 2018)
 
 
 ## Certification
@@ -15,3 +19,4 @@
 [2]: https://www.cncf.io/certification/ckad/
 [3]: https://www.cncf.io/certification/tips
 [4]: https://www2.thelinuxfoundation.org/ckad-tips
+
