@@ -36,6 +36,3 @@
 * Logging and Monitoring
 * Cluster Maintenance
 * Troubleshooting
-
-# Material
-![k8s-big-picture](https://res.cloudinary.com/dukp6c7f7/image/upload/f_auto,fl_lossy,q_auto/s3-ghost/2016/06/o7leok.png)
