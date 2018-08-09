@@ -1,3 +1,4 @@
-- hosts: client
+- hosts: init
   roles:
+    - lb
     - kubectl-client

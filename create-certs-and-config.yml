@@ -7,6 +7,5 @@
   become: yes
   roles:
     - certificates
-    - lb
     - configurationfiles
     - encryption
