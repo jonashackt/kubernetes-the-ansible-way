@@ -18,7 +18,7 @@ ExecStart=/usr/local/bin/etcd \
   --listen-client-urls https://{{ ansible_host }}:2379,https://127.0.0.1:2379 \
   --advertise-client-urls https://{{ ansible_host }}:2379 \
   --initial-cluster-token etcd-cluster-0 \
-  --initial-cluster {% for item in groups['controller'] %}{{ hostvars[item].inventory_hostname }}=https://{{ hostvars[item].ansible_host }}:2380{{ "," if not loop.last else ""}}{% endfor %} \
+  --initial-cluster {% for item in groups['master'] %}{{ hostvars[item].inventory_hostname }}=https://{{ hostvars[item].ansible_host }}:2380{{ "," if not loop.last else ""}}{% endfor %} \
   --initial-cluster-state new \
   --data-dir=/var/lib/etcd
 Restart=on-failure

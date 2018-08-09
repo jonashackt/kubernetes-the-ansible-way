@@ -81,9 +81,9 @@
   until: result.stdout.find("Healthy") != -1
   retries: 5
   delay: 10
-  when: inventory_hostname == 'controller-2'
+  when: inventory_hostname == 'master-2'
 
 - name: Kelly said so
   debug:
     msg: "{{ result.stdout_lines }}"
-  when: inventory_hostname == 'controller-2'
+  when: inventory_hostname == 'master-2'

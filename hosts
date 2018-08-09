@@ -12,5 +12,5 @@ worker-2    ansible_host=172.16.2.102 ansible_ssh_private_key_file=.vagrant/mach
 master
 worker
 
-[init]
+[init-node]
 init        ansible_host=172.16.2.200 ansible_ssh_private_key_file=.vagrant/machines/init/virtualbox/private_key

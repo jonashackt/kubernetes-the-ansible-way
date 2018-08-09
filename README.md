@@ -129,7 +129,7 @@ See the following links:
 We set `--ip-masq=false` inside the `docker.service`. The problem is
 
 ```
-vagrant@controller-0:~$ kubectl exec -i busybox-68654f944b-rgk5q -- nslookup kubernetes
+vagrant@master-0:~$ kubectl exec -i busybox-68654f944b-rgk5q -- nslookup kubernetes
 Server:    10.32.0.10
 ```
 
@@ -142,7 +142,7 @@ We need to add the following to the `flannel.service.j2` (kubeadm had the proble
 NOW the nslookup finally works:
 
 ```
-vagrant@controller-0:~$ kubectl exec -i busybox-68654f944b-rgk5q -- nslookup kubernetes
+vagrant@master-0:~$ kubectl exec -i busybox-68654f944b-rgk5q -- nslookup kubernetes
 Server:    10.32.0.10
 Address 1: 10.32.0.10 kube-dns.kube-system.svc.cluster.local
 

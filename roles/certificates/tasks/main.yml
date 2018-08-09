@@ -76,11 +76,11 @@
     - { node: worker-1, ip: 172.16.2.101 }
     - { node: worker-2, ip: 172.16.2.102 }
 
-- name: Set internal ip list
+- name: Retrieve internal master ip list from inventory
   set_fact:
-    internal_ips: "{% for item in groups['controller'] %}{{ hostvars[item].inventory_hostname }}.k8s,{{ hostvars[item].ansible_host }}{{ ',' if not loop.last else ''}}{% endfor %}"
+    internal_ips: "{% for item in groups['master'] %}{{ hostvars[item].inventory_hostname }}.k8s,{{ hostvars[item].ansible_host }}{{ ',' if not loop.last else ''}}{% endfor %}"
 
-- name: The internal ip list
+- name: The internal master ip list
   debug:
     msg: "{{ internal_ips }}"
 

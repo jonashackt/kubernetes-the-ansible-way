@@ -7,7 +7,7 @@
     client_cert: /var/lib/kubelet/{{ ansible_hostname }}.pem
     client_key: /var/lib/kubelet/{{ ansible_hostname }}-key.pem
     validate_certs: no
-    url: https://controller-0.k8s:2379/v2/keys/kubernetes-cluster/network/config
+    url: https://master-0.k8s:2379/v2/keys/kubernetes-cluster/network/config
     body:
       'value={"Network": "{{ kubernetes_cluster_cidr }}",
          "SubnetLen": 24,
