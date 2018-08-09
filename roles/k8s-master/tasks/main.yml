@@ -1,14 +1,3 @@
-- name: download master component binaries
-  get_url:
-    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
-    dest: "/usr/local/bin/{{ item }}"
-    mode: 0755
-  with_items:
-    - kube-apiserver
-    - kube-controller-manager
-    - kube-scheduler
-    - kubectl
-
 - name: ensure directories exist
   file:
     path: "{{ item }}"
@@ -30,6 +19,17 @@
     - certificates/service-account-key.pem
     - certificates/service-account.pem
     - encryption/encryption-config.yaml
+
+- name: download master component binaries
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubectl
 
 - name: create api-server config
   template:
@@ -75,7 +75,7 @@
     - kube-scheduler
 
 # works without parameter kubeconfig: kubectl get componentstatuses
-- name: verify k8s cluster
+- name: verify, if the k8s cluster is in Healthy state
   shell: kubectl get componentstatuses --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
   register: result
   until: result.stdout.find("Healthy") != -1
@@ -83,7 +83,7 @@
   delay: 10
   when: inventory_hostname == 'master-2'
 
-- name: Kelly said so
+- name: Show output of k8s cluster state
   debug:
     msg: "{{ result.stdout_lines }}"
   when: inventory_hostname == 'master-2'

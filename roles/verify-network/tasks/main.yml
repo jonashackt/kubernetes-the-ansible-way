@@ -1,3 +1,17 @@
+
+- name: verify, if workers are correctly registered in the k8s cluster
+  shell: kubectl get nodes --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
+  register: kubectl_nodes_result
+  until: kubectl_nodes_result.stdout.find("Ready") != -1
+  retries: 5
+  delay: 10
+  when: inventory_hostname == 'master-0'
+
+- name: Worker status
+  debug:
+    msg: "{{ kubectl_nodes_result.stdout_lines }}"
+  when: inventory_hostname == 'master-0'
+
 # Run kuberctl to gather kubernetes nodes "facts"
 - name: Gather Kubernetes nodes facts
   shell: kubectl get nodes --output=json

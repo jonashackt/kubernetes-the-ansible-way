@@ -1,0 +1,5 @@
+# This is the master playbook to bootstrap everything needed for a full k8s cluster
+- import_playbook: k8s-certs-and-config.yml
+- import_playbook: k8s-master-nodes.yml
+- import_playbook: k8s-worker-nodes.yml
+- import_playbook: k8s-external-access.yml
