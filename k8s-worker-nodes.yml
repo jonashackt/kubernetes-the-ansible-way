@@ -7,5 +7,3 @@
   become: yes
   roles:
     - { role: verify-network, tags: network }
-    - { role: kubedns, tags: kubedns }
-    - { role: dashboard, tags: dashboard }

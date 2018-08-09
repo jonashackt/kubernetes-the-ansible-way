@@ -1,7 +1,7 @@
 - hosts: all
   become: yes
   roles:
-    - apt-updates
+    - update-apt
 
 - hosts: init
   become: yes
