@@ -4,7 +4,7 @@
     - { role: kubedns, tags: kubedns }
     - { role: dashboard, tags: dashboard }
 
-- hosts: init
+- hosts: external
   roles:
     - lb
     - kubectl-client

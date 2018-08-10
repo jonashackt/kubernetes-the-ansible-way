@@ -12,6 +12,8 @@ Vagrant.configure("2") do |config|
         'worker-2' => '172.16.2.102',
         # init node to create certificates, configurationfiles, encryption and host inital LB
         'init' => '172.16.2.200',
+        # host inital LB on k8s-external node
+        'external' => '172.16.2.201'
     }
 
     machines.each do |name, ip|
@@ -31,4 +33,6 @@ Vagrant.configure("2") do |config|
             end
         end
     end
+    # deactivate Guest additions update for now
+    config.vbguest.no_install = true
 end
