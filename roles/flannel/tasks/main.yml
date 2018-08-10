@@ -1,21 +1,3 @@
-- name: create installation directories
-  file:
-    state: directory
-    path: "{{ item }}"
-  with_items:
-    - /var/lib/kubelet
-    - /var/lib/kubernetes
-
-- name: copy certificates & configurationfiles
-  copy:
-    src: "/vagrant/{{ item.src }}"
-    dest: "{{ item.dest }}"
-    remote_src: yes
-  with_items:
-    - { src: "certificates/{{ inventory_hostname }}-key.pem", dest: /var/lib/kubelet }
-    - { src: "certificates/{{ inventory_hostname }}.pem", dest: /var/lib/kubelet }
-    - { src: "certificates/ca.pem", dest: /var/lib/kubernetes }
-
 - name: Set flannel network conf on etcd
   uri:
     client_cert: /var/lib/kubelet/{{ ansible_hostname }}.pem

@@ -23,13 +23,6 @@
     src: docker.service.j2
     dest: /lib/systemd/system/docker.service
 
-- name: ensure Docker service is installed and restarted
-  service:
-    name: docker
-    state: restarted
-    daemon_reload: true
-    enabled: yes
-
 - name: add vagrant user to docker group.
   user:
     name: vagrant

@@ -1,3 +1,4 @@
+# All certificate files have to be present for the Flannel configuration
 - name: create installation directories
   file:
     state: directory
@@ -20,13 +21,23 @@
     - { src: "certificates/ca.pem", dest: /var/lib/kubernetes }
     - { src: "configurationfiles/kube-proxy.kubeconfig", dest: /var/lib/kube-proxy/kubeconfig }
 
+# First, the docker.service must be present on the System (because flannel.service defines dependency to it).
 - name: install flannel-pre-configured Docker on Workers
   include_role:
     name: docker
 
+# Then Flannel has to be installed and configured, so that the Environment variables are present for the Docker service to startup.
 - name: install and configure flannel CNI networking
   include_role:
     name: flannel
+
+# Finally the Docker service could be started.
+- name: starting the Docker service will only work after Flannel has been installed
+  service:
+    name: docker
+    state: restarted
+    daemon_reload: true
+    enabled: yes
 
 - name: Verify if flannel is added as network interface
   shell: ip addr
