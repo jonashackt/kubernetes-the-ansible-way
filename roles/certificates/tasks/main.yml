@@ -78,11 +78,11 @@
 
 - name: Retrieve internal master ip list from inventory
   set_fact:
-    internal_ips: "{% for item in groups['master'] %}{{ hostvars[item].inventory_hostname }}.k8s,{{ hostvars[item].ansible_host }}{{ ',' if not loop.last else ''}}{% endfor %}"
+    internal_master_ips: "{% for item in groups['master'] %}{{ hostvars[item].inventory_hostname }}.k8s,{{ hostvars[item].ansible_host }}{{ ',' if not loop.last else ''}}{% endfor %}"
 
 - name: The internal master ip list
   debug:
-    msg: "{{ internal_ips }}"
+    msg: "{{ internal_master_ips }}"
 
 - name: generate Kubernetes API Server Certificate
   shell:
@@ -90,7 +90,7 @@
       -ca=ca.pem \
       -ca-key=ca-key.pem \
       -config=/opt/cfssl-config/ca-config.json \
-      -hostname=10.32.0.1,{{ internal_ips }},{{ kubernetes_public_address }},client-0.k8s,127.0.0.1,kubernetes.default \
+      -hostname=10.32.0.1,{{ internal_master_ips }},{{ kubernetes_public_address }},external.k8s,127.0.0.1,kubernetes.default \
       -profile=kubernetes \
       /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes"
   args:

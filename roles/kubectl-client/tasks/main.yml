@@ -1,7 +1,7 @@
 - name: configure /snap/bin/kubectl
   shell: |
     /snap/bin/kubectl config set-cluster default-cluster \
-      --server=https://client-0.k8s:6443 \
+      --server=https://external.k8s:6443 \
       --certificate-authority=/vagrant/certificates/ca.pem && \
     /snap/bin/kubectl config set-credentials default-admin \
       --certificate-authority=/vagrant/certificates/ca.pem \
