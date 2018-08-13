@@ -4,7 +4,7 @@
 - name: Install kubectl
   shell: "snap install kubectl --classic"
 
-- name: ensure dirs exist
+- name: Ensure that configuration directory exists
   file:
     path: "{{ item }}"
     state: directory
@@ -13,7 +13,7 @@
     - /vagrant/configurationfiles
 
 # Represents the files created with `kubectl config`
-- name: template all kubeconfig files
+- name: Template all kubeconfig files
   template:
     src: kubeconfig.yaml.j2
     dest: /vagrant/configurationfiles/{{ item.name }}.kubeconfig
