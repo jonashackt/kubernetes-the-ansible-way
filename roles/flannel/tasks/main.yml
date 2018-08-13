@@ -33,4 +33,10 @@
     name: flannel
     state: restarted
 
+# Configure flannel-flavoured Docker systemd service
+- name: Copy Docker systemd unit file
+  template:
+    src: docker.service.j2
+    dest: /lib/systemd/system/docker.service
+
 

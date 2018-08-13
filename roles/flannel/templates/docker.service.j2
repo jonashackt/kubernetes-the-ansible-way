@@ -3,7 +3,7 @@
 [Unit]
 Description=Docker configuration for Kubernetes
 Documentation=https://docs.docker.com/install/linux/linux-postinstall/
-After=network-online.target docker.socket firewalld.service
+After=network-online.target docker.socket firewalld.service flannel.service
 Wants=network-online.target
 Requires=docker.socket
  

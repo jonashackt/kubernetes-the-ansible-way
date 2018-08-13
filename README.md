@@ -41,6 +41,8 @@ vagrant up
 
 ![k8s-big-picture](https://res.cloudinary.com/dukp6c7f7/image/upload/f_auto,fl_lossy,q_auto/s3-ghost/2016/06/o7leok.png)
 
+Good introduction: https://www.baeldung.com/kubernetes (german)
+
 * Calico https://www.projectcalico.org/
 * CNI Container Network Interface
 * etcd Distributed reliable key-value store for the most critical data of a distributed system

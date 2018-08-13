@@ -21,7 +21,7 @@
     - { src: "certificates/ca.pem", dest: /var/lib/kubernetes }
     - { src: "configurationfiles/kube-proxy.kubeconfig", dest: /var/lib/kube-proxy/kubeconfig }
 
-# First, the docker.service must be present on the System (because flannel.service defines dependency to it).
+# Install standard Docker package
 - name: install flannel-pre-configured Docker on Workers
   include_role:
     name: docker

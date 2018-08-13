@@ -18,11 +18,6 @@
     update_cache: yes
   become: true
 
-- name: Copy Docker systemd unit file
-  template:
-    src: docker.service.j2
-    dest: /lib/systemd/system/docker.service
-
 - name: add vagrant user to docker group.
   user:
     name: vagrant

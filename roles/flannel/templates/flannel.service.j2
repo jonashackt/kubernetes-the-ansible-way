@@ -16,7 +16,7 @@ ExecStart=/usr/bin/flannel \
   -etcd-prefix=/kubernetes-cluster/network \
   -public-ip={{ hostvars[inventory_hostname]['ansible_enp0s8']['ipv4']['address'] }} \
   -iface=enp0s8 \
-  -ip-masq
+  -ip-masq=true
 Restart=on-failure
  
 [Install]
