@@ -1,9 +1,9 @@
 # This implements https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-certificate-authority.md
-- name: install cfssl
+- name: Install cfssl
   apt:
     name: golang-cfssl
 
-- name: ensure dirs exist
+- name: Ensure dirs exist
   file:
     path: "{{ item }}"
     state: directory
@@ -12,19 +12,25 @@
     - /vagrant/certificates
     - /opt/cfssl-config
 
-- name: copy cfssl config files
+- name: Copy CA cfssl config files
   copy:
     src: "{{ item }}"
     dest: "/opt/cfssl-config/{{ item }}"
   with_items:
     - ca-config.json
+    - ca-csr.json
 
-- name: create cfssl config files
+- name: Generate CA key
+  shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
+  args:
+    chdir: /vagrant/certificates
+    creates: /vagrant/certificates/ca-key.pem
+
+- name: Template cfssl config files
   template:
     src: templates/csr.json.j2
     dest: "/opt/cfssl-config/{{ item.name }}-csr.json"
   with_items:
-    - { prefix: '', name: ca, o: Kubernetes }
     - { prefix: '', name: admin, o: "system:masters" }
     - { prefix: 'system:node:', name: worker-0, o: "system:nodes" }
     - { prefix: 'system:node:', name: worker-1, o: "system:nodes" }
@@ -32,16 +38,10 @@
     - { prefix: 'system:', name: kube-controller-manager, o: "system:kube-controller-manager" }
     - { prefix: 'system:', name: kube-proxy, o: "system:node-proxier" }
     - { prefix: 'system:', name: kube-scheduler, o: "system:kube-scheduler" }
-    - { prefix: '', name: kubernetes, o: Kubernetes }
+    - { prefix: '', name: kube-apiserver, o: Kubernetes }
     - { prefix: '', name: service-account, o: Kubernetes }
 
-- name: generate ca keys
-  shell: cfssl gencert -initca /opt/cfssl-config/ca-csr.json | cfssljson -bare ca
-  args:
-    chdir: /vagrant/certificates
-    creates: /vagrant/certificates/ca-key.pem
-
-- name: generate Client Certificates for admin, kube-controller-manager, kube-proxy, kube-scheduler, service-accounts
+- name: Generate Client Certificates for admin, kube-controller-manager, kube-proxy, kube-scheduler, service-accounts
   shell:
    'cfssl gencert \
       -ca=ca.pem \
@@ -59,7 +59,7 @@
     - kube-scheduler
     - service-account
 
-- name: generate Kubelet Client Certificates
+- name: Generate Kubelet Client Certificates
   shell:
    'cfssl gencert \
       -ca=ca.pem \
@@ -92,10 +92,10 @@
       -config=/opt/cfssl-config/ca-config.json \
       -hostname=10.32.0.1,{{ internal_master_ips }},{{ kubernetes_public_address }},external.k8s,127.0.0.1,kubernetes.default \
       -profile=kubernetes \
-      /opt/cfssl-config/kubernetes-csr.json | cfssljson -bare kubernetes"
+      /opt/cfssl-config/kube-apiserver-csr.json | cfssljson -bare kube-apiserver"
   args:
     chdir: /vagrant/certificates
-    creates: "/vagrant/certificates/kubernetes-key.pem"
+    creates: "/vagrant/certificates/kube-apiserver-key.pem"
 
   # Distribute the Client and Server Certificates
   # is already done via Vagrant (/vagrant/certificates)

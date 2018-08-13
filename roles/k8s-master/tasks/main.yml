@@ -14,8 +14,8 @@
   with_items:
     - certificates/ca.pem
     - certificates/ca-key.pem
-    - certificates/kubernetes-key.pem
-    - certificates/kubernetes.pem
+    - certificates/kube-apiserver-key.pem
+    - certificates/kube-apiserver.pem
     - certificates/service-account-key.pem
     - certificates/service-account.pem
     - encryption/encryption-config.yaml

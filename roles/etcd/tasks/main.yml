@@ -32,8 +32,8 @@
     remote_src: yes
   with_items:
     - ca.pem
-    - kubernetes-key.pem
-    - kubernetes.pem
+    - kube-apiserver-key.pem
+    - kube-apiserver.pem
 
 - name: create etcd service config
   template:
@@ -48,7 +48,7 @@
     enabled: yes
 
 - name: Verify, if etcd cluster has successfully started
-  shell: etcdctl member list --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kubernetes.pem --key=/etc/etcd/kubernetes-key.pem
+  shell: etcdctl member list --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kube-apiserver.pem --key=/etc/etcd/kube-apiserver-key.pem
   environment:
     ETCDCTL_API: 3
   register: etcd_memberlist
@@ -63,7 +63,7 @@
   run_once: true
 
 - name: Verify etcd cluster health
-  shell: "etcdctl endpoint health --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kubernetes.pem --key=/etc/etcd/kubernetes-key.pem"
+  shell: "etcdctl endpoint health --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kube-apiserver.pem --key=/etc/etcd/kube-apiserver-key.pem"
   environment:
     ETCDCTL_API: 3
   register: etcd_clusterhealth

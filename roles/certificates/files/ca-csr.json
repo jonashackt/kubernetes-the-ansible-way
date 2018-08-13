@@ -1,16 +1,16 @@
 {
-  "CN": "Kubernetes",
+  "CN": "kube-ca",
   "key": {
     "algo": "rsa",
     "size": 2048
   },
   "names": [
     {
-      "C": "US",
-      "L": "Portland",
-      "O": "Kubernetes",
+      "C": "DE",
+      "L": "Weimar",
+      "O": "codecentric",
       "OU": "CA",
-      "ST": "Oregon"
+      "ST": "Thuringia"
     }
   ]
 }
