@@ -18,10 +18,10 @@
     src: kubeconfig.yaml.j2
     dest: /vagrant/configurationfiles/{{ item.name }}.kubeconfig
   with_items:
-    - { name: worker-0, server: "{{ kubernetes_public_address}}" }
-    - { name: worker-1, server: "{{ kubernetes_public_address}}" }
-    - { name: worker-2, server: "{{ kubernetes_public_address}}" }
-    - { name: kube-proxy, server: "{{ kubernetes_public_address}}" }
-    - { name: kube-controller-manager, server: '127.0.0.1' }
-    - { name: kube-scheduler, server: '127.0.0.1' }
-    - { name: admin, server: '127.0.0.1' }
+    - { name: worker-0,                prefix: 'system:node:', server: "{{ kubernetes_public_address}}" }
+    - { name: worker-1,                prefix: 'system:node:', server: "{{ kubernetes_public_address}}" }
+    - { name: worker-2,                prefix: 'system:node:', server: "{{ kubernetes_public_address}}" }
+    - { name: kube-proxy,              prefix: 'system:',      server: "{{ kubernetes_public_address}}" }
+    - { name: kube-controller-manager, prefix: 'system:',      server: '127.0.0.1' }
+    - { name: kube-scheduler,          prefix: 'system:',      server: '127.0.0.1' }
+    - { name: admin,                   prefix: '',             server: '127.0.0.1' }

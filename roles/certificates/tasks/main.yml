@@ -31,15 +31,15 @@
     src: templates/csr.json.j2
     dest: "/opt/cfssl-config/{{ item.name }}-csr.json"
   with_items:
-    - { prefix: '', name: admin, o: "system:masters" }
-    - { prefix: 'system:node:', name: worker-0, o: "system:nodes" }
-    - { prefix: 'system:node:', name: worker-1, o: "system:nodes" }
-    - { prefix: 'system:node:', name: worker-2, o: "system:nodes" }
-    - { prefix: 'system:', name: kube-controller-manager, o: "system:kube-controller-manager" }
-    - { prefix: 'system:', name: kube-proxy, o: "system:node-proxier" }
-    - { prefix: 'system:', name: kube-scheduler, o: "system:kube-scheduler" }
-    - { prefix: '', name: kube-apiserver, o: Kubernetes }
-    - { prefix: '', name: service-account, o: Kubernetes }
+    - { name: worker-0,                prefix: 'system:node:', o: "system:nodes" }
+    - { name: worker-1,                prefix: 'system:node:', o: "system:nodes" }
+    - { name: worker-2,                prefix: 'system:node:', o: "system:nodes" }
+    - { name: kube-controller-manager, prefix: 'system:',      o: "system:kube-controller-manager" }
+    - { name: kube-proxy,              prefix: 'system:',      o: "system:node-proxier" }
+    - { name: kube-scheduler,          prefix: 'system:',      o: "system:kube-scheduler" }
+    - { name: kube-apiserver,          prefix: '',             o: Kubernetes }
+    - { name: service-account,         prefix: '',             o: Kubernetes }
+    - { name: admin,                   prefix: '',             o: "system:masters" }
 
 - name: Generate Client Certificates for admin, kube-controller-manager, kube-proxy, kube-scheduler, service-accounts
   shell:
