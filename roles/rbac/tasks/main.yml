@@ -13,11 +13,3 @@
     - /etc/kubernetes/config/rbac-cluster-role.yaml
     - /etc/kubernetes/config/rbac-cluster-role-binding.yaml
   when: inventory_hostname == "master-0"
-  ignore_errors: true
-
-- name: apply rbac a second time, as the first often goes wrong (workaround for now)
-  shell: "kubectl apply --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f {{ item }}"
-  with_items:
-  - /etc/kubernetes/config/rbac-cluster-role.yaml
-  - /etc/kubernetes/config/rbac-cluster-role-binding.yaml
-  when: inventory_hostname == "master-0"
