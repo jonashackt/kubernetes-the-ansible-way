@@ -1,13 +1,13 @@
 - name: download and extract etcd
   unarchive:
-    src: https://github.com/coreos/etcd/releases/download/v3.3.5/etcd-v3.3.5-linux-amd64.tar.gz
+    src: https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz
     remote_src: yes
     dest: /tmp
-    creates: /tmp/etcd-v3.3.5-linux-amd64.tar.gz
+    creates: /tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz
 
 - name: install etcd
   copy:
-    src: "/tmp/etcd-v3.3.5-linux-amd64/{{ item }}"
+    src: "/tmp/etcd-{{ etcd_version }}-linux-amd64/{{ item }}"
     dest: /usr/local/bin/
     remote_src: yes
     mode: 0755
