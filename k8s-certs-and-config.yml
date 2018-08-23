@@ -6,6 +6,6 @@
 - hosts: init
   become: yes
   roles:
-    - certificates
-    - configurationfiles
-    - encryption
+    - { role: certificates, tags: certificates }
+    - { role: configurationfiles, tags: configurationfiles }
+    - { role: encryption, tags: encryption }

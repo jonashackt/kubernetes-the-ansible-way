@@ -6,5 +6,5 @@
 
 - hosts: external
   roles:
-    - lb
-    - kubectl-client
+    - { role: lb, tags: lb }
+    - { role: kubectl-client, tags: kubectl-client }

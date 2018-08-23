@@ -1,6 +1,6 @@
 - hosts: master
   become: yes
   roles:
-    - etcd
-    - k8s-master
-    - rbac
+    - { role: etcd, tags: etcd }
+    - { role: k8s-master, tags: k8s-master }
+    - { role: rbac, tags: rbac }

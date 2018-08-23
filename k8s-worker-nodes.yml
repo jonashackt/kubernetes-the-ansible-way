@@ -1,7 +1,7 @@
 - hosts: worker
   become: yes
   roles:
-    - k8s-worker
+    - { role: k8s-worker, tags: k8s-worker }
 
 - hosts: master-0
   become: yes
