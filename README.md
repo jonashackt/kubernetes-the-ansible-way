@@ -1,4 +1,13 @@
 # kubernetes-the-ansible-way
+[![Build Status](https://travis-ci.org/jonashackt/kubernetes-the-ansible-way.svg?branch=master)](https://travis-ci.org/jonashackt/kubernetes-the-ansible-way)
+[![License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/jonashackt/kubernetes-the-ansible-way/blob/master/LICENSE)
+[![versionkubernetes](https://img.shields.io/badge/kubernetes-v1.10.2-brightgreen.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/etcd-v3.3.5-brightgreen.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/docker-18.06.1-brightgreen.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/flannel-v0.10.0-brightgreen.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/ansible-2.6.3-orange.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/vagrant-2.1.2-orange.svg)]()
+
 Bootstrap Kubernetes the Ansible way on Everything (here: Vagrant). Inspired by [Kelsey Hightower´s kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way), but refactored to Infrastructure-as-Code. 
 
 But we wanted to focus on different aspects:
