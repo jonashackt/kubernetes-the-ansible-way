@@ -2,6 +2,7 @@
 - name: Install cfssl
   apt:
     name: golang-cfssl
+    update_cache: yes
 
 - name: Always purge certificates directory first - otherwise old certs are used. Ignored, if ran the first time.
   file:

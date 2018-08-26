@@ -20,6 +20,7 @@
 - name: install package
   apt:
     name: flannel
+    update_cache: yes
 
 - name: Copy flannel systemd unit file
   template:
