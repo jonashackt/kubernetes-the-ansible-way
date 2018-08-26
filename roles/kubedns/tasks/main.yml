@@ -10,7 +10,7 @@
     dest: /opt/kubedns/kube-dns.yaml
 
 - name: Remove old kube-dns deployment, if already there
-  shell: kubectl delete deployment.apps/kube-dns -n kube-system
+  shell: kubectl delete -f /opt/kubedns/kube-dns.yaml
   ignore_errors: true
 
 - name: Apply kube-dns Service, ServiceAccount, ConfigMap, Deployment
