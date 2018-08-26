@@ -135,6 +135,12 @@ See the following links:
 * https://coreos.com/flannel/docs/latest/flannel-config.html
 * https://icicimov.github.io/blog/kubernetes/Kubernetes-cluster-step-by-step-Part4/
 
+##### Kubernetes DNS (kube-dns)
+
+https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/:
+
+> Kubernetes DNS schedules a DNS Pod and Service on the cluster, and configures the kubelets to tell individual containers to use the DNS Service’s IP to resolve DNS names.
+
 ####### nslookup for kubernetes not working in kubedns / main.yml
 
 We set `--ip-masq=false` inside the `docker.service`. The problem is

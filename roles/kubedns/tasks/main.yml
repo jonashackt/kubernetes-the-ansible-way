@@ -9,7 +9,11 @@
     src: kube-dns.yaml
     dest: /opt/kubedns/kube-dns.yaml
 
-- name: apply kube-dns Service, ServiceAccount, ConfigMap, Deployment
+- name: Remove old kube-dns deployment, if already there
+  shell: kubectl delete deployment.apps/kube-dns -n kube-system
+  ignore_errors: true
+
+- name: Apply kube-dns Service, ServiceAccount, ConfigMap, Deployment
   shell: kubectl apply -f /opt/kubedns/kube-dns.yaml
   register: apply_kubedns_result
 
@@ -32,10 +36,11 @@
   retries: 10
   delay: 10
 
-- name: Show busybox kubectl get output
+- name: Show check output (busybox kubectl get output)
   debug:
     msg: "{{ busybox_result.stdout_lines }}"
 
+# Extract Pod result
 - name: Gather Kubernetes nodes facts
   shell: kubectl get pods -l run=busybox --output=json
   register: pod
@@ -43,7 +48,6 @@
 - set_fact:
     kubernetes_pod: "{{ pod.stdout | from_json }}"
 
-# Extract Pod result
 - debug:
     msg: "Extract Kubernetes node addresses"
   with_flattened:
@@ -53,7 +57,8 @@
 - set_fact:
     pod_name: "{{ pod_name_result.results[0].item }}"
 
-- debug:
+- name: Show busybox full pod name
+  debug:
     msg: "Pod name: {{ pod_name }}"
 
 - name: Execute a DNS lookup for the kubernetes service inside the busybox pod
