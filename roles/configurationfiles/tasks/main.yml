@@ -4,11 +4,10 @@
 - name: Install kubectl
   shell: "snap install kubectl --classic"
 
-- name: Always purge configuration directory first - otherwise old certs are used. Ignored, if ran the first time.
+- name: Always purge configuration directory first - otherwise old certs are used.
   file:
     path: "{{ item }}"
     state: absent
-  ignore_errors: true
   with_items:
   - /vagrant/configurationfiles
 

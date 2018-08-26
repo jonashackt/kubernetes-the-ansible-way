@@ -4,11 +4,10 @@
     name: golang-cfssl
     update_cache: yes
 
-- name: Always purge certificates directory first - otherwise old certs are used. Ignored, if ran the first time.
+- name: Always purge certificates directory first - otherwise old certs are used.
   file:
     path: "{{ item }}"
     state: absent
-  ignore_errors: true
   with_items:
   - /vagrant/certificates
   - /opt/cfssl-config

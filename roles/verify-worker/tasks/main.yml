@@ -1,5 +1,5 @@
 
-- name: verify, if workers are correctly registered in the k8s cluster
+- name: Verify, if workers are correctly registered in the k8s cluster
   shell: kubectl get nodes --kubeconfig /vagrant/configurationfiles/admin.kubeconfig
   register: kubectl_nodes_result
   until: kubectl_nodes_result.stdout.find("Ready") != -1
@@ -9,6 +9,14 @@
 - name: Worker status
   debug:
     msg: "{{ kubectl_nodes_result.stdout_lines }}"
+
+- name: Verify, if workers are in state NodeReady
+  shell: "kubectl describe nodes {{ item }}"
+  register: kubectl_describe_result
+  until: "kubectl_describe_result.stdout.find(\"Node {{ item }} status is now: NodeReady\") != -1"
+  retries: 5
+  delay: 10
+  with_items: "{{ groups['worker'] }}"
 
 # Run kuberctl to gather kubernetes nodes "facts"
 - name: Gather Kubernetes nodes facts
