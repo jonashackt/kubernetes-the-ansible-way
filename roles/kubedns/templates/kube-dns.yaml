@@ -163,6 +163,8 @@ spec:
         - --server=/cluster.local/127.0.0.1#10053
         - --server=/in-addr.arpa/127.0.0.1#10053
         - --server=/ip6.arpa/127.0.0.1#10053
+        # see https://github.com/eBayClassifiedsGroup/PanteraS/issues/166#issuecomment-169779226
+        - --dns-forward-max=300
         ports:
         - containerPort: 53
           name: dns

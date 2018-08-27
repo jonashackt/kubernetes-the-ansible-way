@@ -1,0 +1,11 @@
+# see https://stackoverflow.com/a/52036125/4964553
+# this is needed later for a working kube-dns DNS resolution
+- name: Remove original /etc/resolv.conf
+  shell: mv /etc/resolv.conf /etc/resolv.conf_orig
+
+- name: Link /run/systemd/resolve/resolv.conf as new /etc/resolv.conf
+  file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+

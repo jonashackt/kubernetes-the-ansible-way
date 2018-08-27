@@ -137,11 +137,16 @@ See the following links:
 
 ##### Kubernetes DNS (kube-dns)
 
+Debug Service DNS: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/#does-the-service-work-by-ip
+
+Debug kube-dns: https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+
 https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/:
 
 > Kubernetes DNS schedules a DNS Pod and Service on the cluster, and configures the kubelets to tell individual containers to use the DNS Service’s IP to resolve DNS names.
 
-####### nslookup for kubernetes not working in kubedns / main.yml
+
+###### nslookup for kubernetes not working in kubedns / main.yml
 
 We set `--ip-masq=false` inside the `docker.service`. The problem is
 
@@ -165,6 +170,36 @@ Address 1: 10.32.0.10 kube-dns.kube-system.svc.cluster.local
 
 Name:      kubernetes
 Address 1: 10.32.0.1 kubernetes.default.svc.cluster.local
+```
+
+###### if nslookup still doesnt work - "If the outer resolv.conf points to 127.0.0.1:53, then you will have a DNS lookup loop"
+
+see https://github.com/kubernetes/kubernetes/issues/49411#issuecomment-318096636
+
+> Kubedns inherits the contents of “/etc/resolv.conf” something the maintainers of these pods should document at the following site (https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns ) as it takes a lot of research and googling to find such details hidden under forum comments. My two cents
+
+check your Ubuntu boxes `cat /etc/resolve.conf`: 
+
+```
+nameserver 127.0.0.53
+```
+
+> systemd-resolved on my host listens on 127.0.0.53:53 for dns queries, as soon as I uninstall systemd-resolved and install dnsmasq my node has an entry of 127.0.0.1 in /etc/resolv.conf instead of 127.0.0.53, this gets inherited by the kubedns pods and for some reason its able to forward unresolved queries to my host dnsmasq. Earlier, the kubedns inherited the 127.0.0.53 IP from node “/etc/resolv.conf” and for some reason its not able to talk to the node systemd-resolved at that IP.
+
+
+__Solution:__
+
+See https://askubuntu.com/a/974482/451114 & https://askubuntu.com/questions/952284/dns-system-is-failing-to-resolve-domain-names-occasionally#comment1589832_952284
+
+```
+sudo mv /etc/resolv.conf /etc/resolv.conf_orig
+sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+```
+
+Now `cat /etc/resolve.conf` should inherit the correct nameserver (VirtualBox DNS server):
+
+```
+nameserver 10.0.2.3
 ```
 
 ### Where did we stop? (on 22. Juni 2018)
@@ -206,6 +241,7 @@ curl --cacert certificates/ca.pem --key certificates/admin-key.pem --cert certif
   * [kubernetes by example][4] 
   * [Best practice by google][5] 
   * [Tutorialspoint][6] 
+  * Tutorials: https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/
 
 
 [0]: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
