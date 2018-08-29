@@ -27,11 +27,21 @@
 
 # Extract Nginx Node port
 - name: Gather nginx node facts
-  shell: kubectl get service -l run=nginx --output=json
-  register: nginx_pod_result
-
-- set_fact:
-    nginx_pod: "{{ nginx_pod_result.stdout | from_json }}"
+  shell: "{% raw %} kubectl get svc nginx --output=jsonpath='{range .spec.ports[0]}{.nodePort}' {% endraw %}"
+  register: nginx_nodeport_result
 
 - debug:
-    msg: "Extract Nginx Node port (nginx_pod: {{ nginx_pod }} )"
+    msg: "The nginx nodePort is: {{ nginx_nodeport_result.stdout }}"
+
+- name: Make an HTTP request using the external IP address and the nginx node port
+  uri:
+    url: "http://worker-0.k8s:{{ nginx_nodeport_result.stdout }}"
+  register: worker_result
+  until: worker_result.status == 200
+  retries: 5
+  delay: 5
+
+- name: Response from nginx
+  debug:
+    msg: "{{ worker_result }}"
+
