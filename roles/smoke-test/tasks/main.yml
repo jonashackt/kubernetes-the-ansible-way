@@ -1,0 +1,37 @@
+# see https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/13-smoke-test.md#deployments
+- name: Delete nginx deployment, if already there
+  shell: kubectl delete deployment.apps/nginx -n default
+  ignore_errors: true
+
+- name: Create a nginx deployment
+  shell: kubectl run nginx --image=nginx
+
+- name: Check if nginx deployment is running
+  shell: kubectl get pods -l run=nginx
+  register: nginx_result
+  until: nginx_result.stdout.find("Running") != -1
+  retries: 10
+  delay: 10
+
+- name: Show nginx kubectl get output
+  debug:
+    msg: "{{ nginx_result.stdout_lines }}"
+
+# Check Service accessability
+- name: Delete nginx service, if already there
+  shell: kubectl delete service/nginx -n default
+  ignore_errors: true
+
+- name: Create a nginx service
+  shell: kubectl expose deployment nginx --port 80 --type NodePort
+
+# Extract Nginx Node port
+- name: Gather nginx node facts
+  shell: kubectl get service -l run=nginx --output=json
+  register: nginx_pod_result
+
+- set_fact:
+    nginx_pod: "{{ nginx_pod_result.stdout | from_json }}"
+
+- debug:
+    msg: "Extract Nginx Node port (nginx_pod: {{ nginx_pod }} )"
