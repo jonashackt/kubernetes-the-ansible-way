@@ -4,7 +4,7 @@
   ignore_errors: true
 
 - name: Create a nginx deployment
-  shell: kubectl run nginx:stable --image=nginx
+  shell: kubectl run nginx --image=nginx:stable
 
 - name: Check if nginx deployment is running
   shell: kubectl get pods -l run=nginx
