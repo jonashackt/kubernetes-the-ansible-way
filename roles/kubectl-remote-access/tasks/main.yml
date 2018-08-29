@@ -1,0 +1,47 @@
+# see https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/10-configuring-kubectl.md
+- name: Install kubectl
+  shell: "snap install kubectl --classic"
+
+- name: Configuring kubectl for Remote Access - kubectl config set-cluster
+  shell: |
+    kubectl config set-cluster kubernetes-the-hard-way \
+      --certificate-authority=/vagrant/certificates/ca.pem \
+      --embed-certs=true \
+      --server=https://external.k8s:6443
+
+- name: Configuring kubectl for Remote Access - kubectl config set-credentials
+  shell: |
+    kubectl config set-credentials admin \
+      --client-certificate=/vagrant/certificates/admin.pem \
+      --client-key=/vagrant/certificates/admin-key.pem
+
+- name: Configuring kubectl for Remote Access - kubectl config set-context
+  shell: |
+    kubectl config set-context kubernetes-the-hard-way \
+      --cluster=kubernetes-the-hard-way \
+      --user=admin
+
+- name: Configuring kubectl for Remote Access - kubectl config use-context
+  shell: kubectl config use-context kubernetes-the-hard-way
+
+- name: Verify, if we are able to access the k8s cluster state
+  shell: kubectl get componentstatuses
+  register: k8s_cluster_state
+  until: k8s_cluster_state.stdout.find("Healthy") != -1
+  retries: 5
+  delay: 10
+
+- name: Show output of k8s cluster state
+  debug:
+    msg: "{{ k8s_cluster_state.stdout_lines }}"
+
+- name: Verify, if we are able to access k8s node state
+  shell: kubectl get nodes
+  register: k8s_node_state
+  until: k8s_node_state.stdout.find("Ready") != -1
+  retries: 5
+  delay: 10
+
+- name: Show output of k8s node state
+  debug:
+    msg: "{{ k8s_node_state.stdout_lines }}"
