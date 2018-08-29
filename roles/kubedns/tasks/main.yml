@@ -27,7 +27,7 @@
   ignore_errors: true
 
 - name: Create a busybox deployment
-  shell: kubectl run busybox --image=busybox --command -- sleep 3600
+  shell: kubectl run busybox --image=busybox:1.28.4 --command -- sleep 3600
 
 - name: Check if busybox deployment is running
   shell: kubectl get pods -l run=busybox

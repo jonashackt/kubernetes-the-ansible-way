@@ -174,7 +174,11 @@ Address 1: 10.32.0.1 kubernetes.default.svc.cluster.local
 
 ###### if nslookup still doesnt work - "If the outer resolv.conf points to 127.0.0.1:53, then you will have a DNS lookup loop"
 
-see https://github.com/kubernetes/kubernetes/issues/49411#issuecomment-318096636
+The problem is node DNS configuration inheritance! See https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#inheriting-dns-from-the-node
+
+> When running a Pod, kubelet prepends the cluster DNS server and searches paths to the node’s DNS settings. If you don’t want this, or if you want a different DNS config for pods, you can use the kubelet’s --resolv-conf flag. Set this flag to “” to prevent Pods from inheriting DNS. 
+
+Also see https://github.com/kubernetes/kubernetes/issues/49411#issuecomment-318096636
 
 > Kubedns inherits the contents of “/etc/resolv.conf” something the maintainers of these pods should document at the following site (https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns ) as it takes a lot of research and googling to find such details hidden under forum comments. My two cents
 
@@ -201,6 +205,18 @@ Now `cat /etc/resolve.conf` should inherit the correct nameserver (VirtualBox DN
 ```
 nameserver 10.0.2.3
 ```
+
+See https://stackoverflow.com/questions/45246147/kubernetes-kubedns-sidecar-and-masq-crashes-if-i-do-a-nslookup/52036125#52036125
+
+###### Busybox seems to have nslookup problems
+
+You won´t believe it: But the latest busybox image isn´t able to do a proper `nslookup`:
+
+https://github.com/kubernetes/kubernetes/issues/45479
+https://github.com/kubernetes/kubernetes/issues/66924
+https://github.com/docker-library/busybox/issues/48
+https://github.com/kelseyhightower/kubernetes-the-hard-way/issues/356
+https://stackoverflow.com/a/52036125/4964553
 
 ### Where did we stop? (on 22. Juni 2018)
 
