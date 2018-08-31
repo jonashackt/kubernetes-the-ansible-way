@@ -28,7 +28,11 @@ Install [Ansible](https://www.ansible.com/), [Vagrant](https://www.vagrantup.com
 * [vagrant-dns](https://github.com/BerlinVagrant/vagrant-dns)
 * [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
 
-And then run `vagrant dns --install`.
+And then run `vagrant dns --install`. Check, if the domain `.k8s` was registered correctly with:
+
+```
+scutil --dns
+```
 
 __Alternatively__, use the following scripts depending on your Host´s platform:
 
@@ -45,6 +49,15 @@ Then do the usual:
 vagrant up
 ```
 
+And check, if you can reach a node:
+
+```
+dscacheutil -q host -a name master-0.k8s
+```
+
+This setup heavily relies on the Vagrant DNS plugin: https://github.com/BerlinVagrant/vagrant-dns
+
+##### Vagrant DNS howitworks: TODO
 
 # Glossar
 
