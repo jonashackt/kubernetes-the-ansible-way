@@ -3,7 +3,6 @@
   roles:
   - { role: etcd, tags: etcd }
   - { role: k8s-master, tags: k8s-master }
-  - { role: rbac, tags: rbac }
 
 - hosts: external
   become: yes

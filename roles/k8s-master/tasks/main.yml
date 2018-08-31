@@ -87,3 +87,21 @@
   debug:
     msg: "{{ result.stdout_lines }}"
   when: inventory_hostname == 'master-2'
+
+# Apply access roles for kube-apiserver
+- name: Copy ClusterRole and ClusterRoleBinding for kube-apiserver accessing kubelets
+  copy:
+    src: "{{ item }}"
+    dest: /etc/kubernetes/config/
+  with_items:
+  - kube-apiserver-cluster-role.yaml
+  - kube-apiserver-cluster-role-binding.yaml
+  when: inventory_hostname == "master-2"
+
+- name: Apply ClusterRole for kube-apiserver accessing kubelets
+  shell: kubectl apply --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f /etc/kubernetes/config/kube-apiserver-cluster-role.yaml
+  when: inventory_hostname == "master-2"
+
+- name: Apply ClusterRoleBinding for kube-apiserver accessing kubelets
+  shell: kubectl apply --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f /etc/kubernetes/config/kube-apiserver-cluster-role-binding.yaml
+  when: inventory_hostname == "master-2"
