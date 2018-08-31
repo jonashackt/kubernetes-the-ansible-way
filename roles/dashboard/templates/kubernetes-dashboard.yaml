@@ -42,10 +42,10 @@ metadata:
 ---
 # ------------------- Dashboard Role & Role Binding ------------------- #
 
-kind: Role
+kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: kubernetes-dashboard-minimal
+  name: kubernetes-dashboard
   namespace: kube-system
 rules:
   # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret.
@@ -67,25 +67,26 @@ rules:
   resourceNames: ["kubernetes-dashboard-settings"]
   verbs: ["get", "update"]
   # Allow Dashboard to get metrics from heapster.
-- apiGroups: [""]
-  resources: ["services"]
-  resourceNames: ["heapster"]
-  verbs: ["proxy"]
-- apiGroups: [""]
-  resources: ["services/proxy"]
-  resourceNames: ["heapster", "http:heapster:", "https:heapster:"]
-  verbs: ["get"]
+#- apiGroups: [""]
+#  resources: ["services"]
+#  resourceNames: ["heapster"]
+#  verbs: ["proxy"]
+#- apiGroups: [""]
+#  resources: ["services/proxy"]
+#  resourceNames: ["heapster", "http:heapster:", "https:heapster:"]
+#  verbs: ["get"]
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
 metadata:
-  name: kubernetes-dashboard-minimal
-  namespace: kube-system
+  name: kubernetes-dashboard
+  labels:
+    k8s-app: kubernetes-dashboard
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: kubernetes-dashboard-minimal
+  kind: ClusterRole
+  name: cluster-admin
 subjects:
 - kind: ServiceAccount
   name: kubernetes-dashboard
@@ -114,16 +115,16 @@ spec:
     spec:
       containers:
       - name: kubernetes-dashboard
-        image: k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.3
+        image: k8s.gcr.io/kubernetes-dashboard-amd64:{{kubernetes_dashboard_version}}
         ports:
         - containerPort: 8443
           protocol: TCP
         args:
-          - --auto-generate-certificates
-          # Uncomment the following line to manually specify Kubernetes API server Host
-          # If not specified, Dashboard will attempt to auto discover the API server and connect
-          # to it. Uncomment only if the default does not work.
-          # - --apiserver-host=http://my-address:port
+        - --auto-generate-certificates
+        # Uncomment the following line to manually specify Kubernetes API server Host
+        # If not specified, Dashboard will attempt to auto discover the API server and connect
+        # to it. Uncomment only if the default does not work.
+        # - --apiserver-host=http://my-address:port
         volumeMounts:
         - name: kubernetes-dashboard-certs
           mountPath: /certs

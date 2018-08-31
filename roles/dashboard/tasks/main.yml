@@ -5,9 +5,13 @@
     state: directory
 
 - name: copy kubernetes-dashboard.yaml
-  copy:
+  template:
     src: kubernetes-dashboard.yaml
     dest: /opt/dashboard/kubernetes-dashboard.yaml
+
+- name: delete old dashboard Service, ServiceAccount, Deployment etc
+  shell: kubectl delete -f /opt/dashboard/kubernetes-dashboard.yaml
+  ignore_errors: true
 
 - name: apply dashboard Service, ServiceAccount, Deployment etc
   shell: kubectl apply -f /opt/dashboard/kubernetes-dashboard.yaml

@@ -218,14 +218,28 @@ https://github.com/docker-library/busybox/issues/48
 https://github.com/kelseyhightower/kubernetes-the-hard-way/issues/356
 https://stackoverflow.com/a/52036125/4964553
 
-### Where did we stop? (on 22. Juni 2018)
 
-We´ve reached every step till:
+## Dashboard
 
-https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/13-smoke-test.md#services
+> First thing important: Kubernetes and Dashboard versions need to be compatible! See https://github.com/kubernetes/dashboard/wiki/Compatibility-matrix
+
+https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+
+Installation: https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup (don´t use kubectl proxy!)
+
+Access: Through API-Server: https://github.com/kubernetes/dashboard/wiki/Accessing-Dashboard---1.6.X-and-below#api-server
+
+> In case Kubernetes API server is exposed and accessible from outside you can directly access dashboard at: 
+
+```
+https://external.k8s:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+```
+
+Grant Dashboard Admin-Rights: https://github.com/kubernetes/dashboard/wiki/Access-control#admin-privileges
+
+> Make sure that you know what you are doing before proceeding. Granting admin privileges to Dashboard's Service Account might be a security risk.
 
 And the dashboard could´nt be accesses right away, only manually by Johannes with a port forwarding and tiller-deployment to retrieve the Token (key didn´t work).
-
 
 
 
