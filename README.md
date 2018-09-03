@@ -256,6 +256,69 @@ And the dashboard could´nt be accesses right away, only manually by Johannes wi
 
 
 
+#### Accessing Dashboard
+
+###### Authentication
+
+See https://kubernetes.io/docs/reference/access-authn-authz/authentication/. 
+
+We always (regardless which access we want to do to our k8s cluster) need to authenticate against the `kube-apiserver`. This can be done through many ways, one is to use a [Bearer Token](https://github.com/kubernetes/dashboard/wiki/Creating-sample-user#bearer-token) inside the Request. Extract the Token with:
+
+```
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep YourDashboardUserHere | awk '{print $1}')
+```
+
+or
+
+```
+kubectl -n kube-system get secret
+kubectl -n kube-system describe secret kubernetes-dashboard-token-7pxdg
+```
+
+This gives something like:
+
+```
+Name:         kubernetes-dashboard-token-7pxdg
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name=kubernetes-dashboard
+              kubernetes.io/service-account.uid=b7a7d00e-acfe-11e8-9ce0-027a2f310a05
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1314 bytes
+namespace:  11 bytes
+token:      fooBarYourTokenHere
+```
+
+Now use your Token `fooBarYourTokenHere` within a HTTP request to `https://external.k8s:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/`.
+
+If not, you´ll see a message like this:
+
+```
+{
+    "kind": "Status",
+    "apiVersion": "v1",
+    "metadata": {},
+    "status": "Failure",
+    "message": "services \"https:kubernetes-dashboard:\" is forbidden: User \"system:anonymous\" cannot get services/proxy in the namespace \"kube-system\"",
+    "reason": "Forbidden",
+    "details": {
+        "name": "https:kubernetes-dashboard:",
+        "kind": "services"
+    },
+    "code": 403
+}
+```
+
+
+###### Authorization
+
+See https://kubernetes.io/docs/reference/access-authn-authz/authorization/
+
+
 ## Commands
 ```bash
 # check dns configs on mac
