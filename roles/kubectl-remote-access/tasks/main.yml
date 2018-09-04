@@ -4,7 +4,7 @@
 
 - name: Configuring kubectl for Remote Access - kubectl config set-cluster
   shell: |
-    kubectl config set-cluster kubernetes-the-hard-way \
+    kubectl config set-cluster {{ kubernetes_cluster_name }} \
       --certificate-authority=/vagrant/certificates/ca.pem \
       --embed-certs=true \
       --server=https://external.k8s:6443
@@ -17,12 +17,12 @@
 
 - name: Configuring kubectl for Remote Access - kubectl config set-context
   shell: |
-    kubectl config set-context kubernetes-the-hard-way \
-      --cluster=kubernetes-the-hard-way \
+    kubectl config set-context cluster-access \
+      --cluster={{ kubernetes_cluster_name }} \
       --user=admin
 
 - name: Configuring kubectl for Remote Access - kubectl config use-context
-  shell: kubectl config use-context kubernetes-the-hard-way
+  shell: kubectl config use-context cluster-access
 
 - name: Verify, if we are able to access the k8s cluster state
   shell: kubectl get componentstatuses

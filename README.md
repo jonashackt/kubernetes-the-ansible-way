@@ -271,7 +271,7 @@ If you´re using [Proxy-mode: iptables](https://kubernetes.io/docs/concepts/serv
 If you want to interact with your k8s cluster, you need to setup your CLI for the specific cluster (`config set-cluster`), user (`config set-credentials`) and context (`config set-context`). All three are applied by a subsequent `config use-context`. For our `kubernetes-the-ansible-way` cluster, using the `admin` user, this is the following:
 
 ```
-kubectl config set-cluster kubernetes-the-hard-way \
+kubectl config set-cluster kubernetes-the-ansible-way \
       --certificate-authority=certificates/ca.pem \
       --embed-certs=true \
       --server=https://external.k8s:6443
@@ -280,11 +280,11 @@ kubectl config set-credentials admin \
       --client-certificate=certificates/admin.pem \
       --client-key=certificates/admin-key.pem
 
-kubectl config set-context kubernetes-the-hard-way \
+kubectl config set-context cluster-access \
       --cluster=kubernetes-the-hard-way \
       --user=admin
 
-kubectl config use-context kubernetes-the-hard-way
+kubectl config use-context cluster-access
 ```
 
 Review the successful configuration by a `kubectl cluster-info`. This should give something like:
@@ -296,6 +296,8 @@ KubeDNS is running at https://external.k8s:6443/api/v1/namespaces/kube-system/se
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
+
+or have a look at your configuration with `kubectl config view` (see https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-for-the-first-time-with-kubectl).
 
 ###### Authentication
 
