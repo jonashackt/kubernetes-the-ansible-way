@@ -256,7 +256,46 @@ And the dashboard could´nt be accesses right away, only manually by Johannes wi
 
 
 
-#### Accessing Dashboard
+#### Accessing k8s resources (like the Dashboard)
+
+General docs for k8s service access: https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/
+
+Also have a look on how Services are accessing Pods - and are itself accessed by the kube-apiserver: https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-iptables
+
+If you´re using [Proxy-mode: iptables](https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-iptables) like in this example here, then this looks like:
+
+![iptables-proxy-access](https://d33wubrfki0l68.cloudfront.net/837afa5715eb31fb9ca6516ec6863e810f437264/42951/images/docs/services-iptables-overview.svg)
+
+###### Configure kubectl to access our k8s cluster
+
+If you want to interact with your k8s cluster, you need to setup your CLI for the specific cluster (`config set-cluster`), user (`config set-credentials`) and context (`config set-context`). All three are applied by a subsequent `config use-context`. For our `kubernetes-the-ansible-way` cluster, using the `admin` user, this is the following:
+
+```
+kubectl config set-cluster kubernetes-the-hard-way \
+      --certificate-authority=certificates/ca.pem \
+      --embed-certs=true \
+      --server=https://external.k8s:6443
+
+kubectl config set-credentials admin \
+      --client-certificate=certificates/admin.pem \
+      --client-key=certificates/admin-key.pem
+
+kubectl config set-context kubernetes-the-hard-way \
+      --cluster=kubernetes-the-hard-way \
+      --user=admin
+
+kubectl config use-context kubernetes-the-hard-way
+```
+
+Review the successful configuration by a `kubectl cluster-info`. This should give something like:
+
+```
+$ kubectl cluster-info
+Kubernetes master is running at https://external.k8s:6443
+KubeDNS is running at https://external.k8s:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
 
 ###### Authentication
 
@@ -317,6 +356,11 @@ If not, you´ll see a message like this:
 ###### Authorization
 
 See https://kubernetes.io/docs/reference/access-authn-authz/authorization/
+
+kubernetes-the-hard-way configure Node and RBAC authorization modules. [RBAC is defined as](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules):
+
+> RBAC - Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise
+
 
 
 ## Commands
