@@ -152,6 +152,16 @@ See the following links:
 
 Debug Service DNS: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/#does-the-service-work-by-ip
 
+Really helpful from this article -> the kubernetes test [hostnames image](https://github.com/kubernetes/kubernetes/tree/master/test/images/serve-hostname):
+
+```
+kubectl run hostnames --image=k8s.gcr.io/serve_hostname \
+                        --labels=app=hostnames \
+                        --port=9376 \
+                        --replicas=3
+kubectl expose deployment hostnames --port=80 --target-port=9376
+```
+
 Debug kube-dns: https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
 
 https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/:
@@ -281,7 +291,7 @@ kubectl config set-credentials admin \
       --client-key=certificates/admin-key.pem
 
 kubectl config set-context cluster-access \
-      --cluster=kubernetes-the-hard-way \
+      --cluster=kubernetes-the-ansible-way \
       --user=admin
 
 kubectl config use-context cluster-access
@@ -298,6 +308,9 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 or have a look at your configuration with `kubectl config view` (see https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-for-the-first-time-with-kubectl).
+
+> Keep in mind, that a Kubernetes context is a triple out of cluster(name), user(name) & namespace. [See the docs](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#define-clusters-users-and-contexts)
+
 
 ###### Authentication
 
@@ -363,6 +376,41 @@ kubernetes-the-hard-way configure Node and RBAC authorization modules. [RBAC is 
 
 > RBAC - Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise
 
+
+
+###### Access Dashboard directly on worker-nodes
+
+As we deployed Dashboard with `NodePort`, run `kubectl get services -n kube-system` to get the NodePort of your Dashboard Service:
+
+```
+vagrant@master-0:/$ kubectl get services -n kube-system
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)         AGE
+kube-dns               ClusterIP   10.32.0.10    <none>        53/UDP,53/TCP   5d
+kubernetes-dashboard   NodePort    10.32.0.242   <none>        443:30348/TCP   5d
+```
+
+Now enter the following URL into your Browser and accept the SecurityExceptions: `https://worker-1.k8s:30348` (regardless which worker)
+
+Extract the Dashboard Bearer Token with:
+
+```
+kubectl -n kube-system get secret
+kubectl -n kube-system describe secret kubernetes-dashboard-token-7pxdg
+```
+
+and paste the Token into the provided field of the Loginscreen. Now you should see the Dashboard:
+
+![kubernetes-dashboard](kubernetes-dashboard.png)
+
+#### Access a k8s cluster app (pod) through a Service
+
+https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/
+
+```
+kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --image=gcr.io/google-samples/node-hello:1.0  --port=8080
+
+kubectl expose deployment hello-world --type=NodePort --name=hello-world-service
+```
 
 
 ## Commands
