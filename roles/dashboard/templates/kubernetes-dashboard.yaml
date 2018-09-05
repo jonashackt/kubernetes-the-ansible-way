@@ -42,30 +42,30 @@ metadata:
 ---
 # ------------------- Dashboard Role & Role Binding ------------------- #
 
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: kubernetes-dashboard
-  namespace: kube-system
-rules:
-  # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret.
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["create"]
-  # Allow Dashboard to create 'kubernetes-dashboard-settings' config map.
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["create"]
-  # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
-- apiGroups: [""]
-  resources: ["secrets"]
-  resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
-  verbs: ["get", "update", "delete"]
-  # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
-- apiGroups: [""]
-  resources: ["configmaps"]
-  resourceNames: ["kubernetes-dashboard-settings"]
-  verbs: ["get", "update"]
+#kind: ClusterRole
+#apiVersion: rbac.authorization.k8s.io/v1
+#metadata:
+#  name: kubernetes-dashboard-minimal
+#  namespace: kube-system
+#rules:
+#  # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret.
+#- apiGroups: [""]
+#  resources: ["secrets"]
+#  verbs: ["create"]
+#  # Allow Dashboard to create 'kubernetes-dashboard-settings' config map.
+#- apiGroups: [""]
+#  resources: ["configmaps"]
+#  verbs: ["create"]
+#  # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
+#- apiGroups: [""]
+#  resources: ["secrets"]
+#  resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
+#  verbs: ["get", "update", "delete"]
+#  # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
+#- apiGroups: [""]
+#  resources: ["configmaps"]
+#  resourceNames: ["kubernetes-dashboard-settings"]
+#  verbs: ["get", "update"]
   # Allow Dashboard to get metrics from heapster.
 #- apiGroups: [""]
 #  resources: ["services"]
@@ -77,6 +77,8 @@ rules:
 #  verbs: ["get"]
 
 ---
+# Granting dashboard full administrative access, as described
+# here https://github.com/kubernetes/dashboard/wiki/Access-control#admin-privileges
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
