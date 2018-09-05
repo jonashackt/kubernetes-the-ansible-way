@@ -264,11 +264,14 @@ Grant Dashboard Admin-Rights: https://github.com/kubernetes/dashboard/wiki/Acces
 
 And the dashboard could´nt be accesses right away, only manually by Johannes with a port forwarding and tiller-deployment to retrieve the Token (key didn´t work).
 
+Usage of Dashboard is described here: https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 
 
 #### Accessing k8s resources (like the Dashboard)
 
 General docs for k8s service access: https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/
+
+> Be sure to know the [service publishing types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types), especially `ClusterIP`, `NodePort`, `Loadbalancer`
 
 Also have a look on how Services are accessing Pods - and are itself accessed by the kube-apiserver: https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-iptables
 
@@ -376,7 +379,7 @@ kubernetes-the-hard-way configure Node and RBAC authorization modules. [RBAC is 
 
 > RBAC - Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise
 
-
+For configuring a Dashboard user, see https://github.com/kubernetes/dashboard/wiki/Creating-sample-user#bearer-token
 
 ###### Access Dashboard directly on worker-nodes
 
