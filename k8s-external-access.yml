@@ -7,6 +7,7 @@
   become: yes
   roles:
     - { role: kubectl-remote-access, tags: kubectl }
+    - { role: helm-tiller, tags: helm }
 
 - hosts: master-0
   become: yes

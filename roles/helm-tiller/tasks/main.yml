@@ -1,0 +1,26 @@
+# see https://docs.helm.sh/using_helm/#installing-tiller
+- name: Install Helm
+  shell: snap install helm
+
+- name: Ensure helm directory exists
+  file:
+    path: /root/snap/helm/common/kube/
+    state: directory
+
+- name: Copy kubeconfig for Tiller
+  copy:
+    src: /vagrant/configurationfiles/admin.kubeconfig
+    dest: /root/snap/helm/common/kube/config
+    remote_src: yes
+
+- name: Install Tiller
+  shell: helm init
+
+- name: Verify, if Tiller was installed
+  shell: kubectl get pods --namespace kube-system -l name=tiller
+  register: kubectl_kube_system_pods
+  until: kubectl_kube_system_pods.stdout.find("Running") != -1
+  retries: 5
+  delay: 10
+
+

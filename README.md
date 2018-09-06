@@ -415,12 +415,50 @@ kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --imag
 kubectl expose deployment hello-world --type=NodePort --name=hello-world-service
 ```
 
+## Helm
+
+Install Helm / Tiller: https://docs.helm.sh/using_helm/
+
+#### Helm client
+
+Mac: `brew install kubernetes-helm`
+
+Windows: `choco install kubernetes-helm`
+
+#### Helm server (Tiller)
+
+https://docs.helm.sh/using_helm/#installing-tiller
+
+The role [helm-tiller](/roles/helm-tiller/tasks/main.yml) takes care of the installation:
+
+```bash
+- name: Install Helm
+  shell: snap install helm
+
+- name: Ensure helm directory exists
+  file:
+    path: /root/snap/helm/common/kube/
+    state: directory
+
+- name: Copy kubeconfig for Tiller
+  copy:
+    src: /vagrant/configurationfiles/admin.kubeconfig
+    dest: /root/snap/helm/common/kube/config
+    remote_src: yes
+
+- name: Install Tiller
+  shell: helm init
+
+- name: Verify, if Tiller was installed
+  shell: kubectl get pods --namespace kube-system -l name=tiller
+  register: kubectl_kube_system_pods
+  until: kubectl_kube_system_pods.stdout.find("Running") != -1
+  retries: 5
+  delay: 10
+```
+
 
 ## Commands
-```bash
-# check dns configs on mac
-scutil --dns
-```
 
 ```bash
 
