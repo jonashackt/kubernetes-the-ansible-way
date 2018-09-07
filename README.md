@@ -431,39 +431,53 @@ https://docs.helm.sh/using_helm/#installing-tiller
 
 The role [helm-tiller](/roles/helm-tiller/tasks/main.yml) takes care of the installation:
 
-```bash
-- name: Install Helm
-  shell: snap install helm
-
-- name: Ensure helm directory exists
-  file:
-    path: /root/snap/helm/common/kube/
-    state: directory
-
-- name: Copy kubeconfig for Tiller
-  copy:
-    src: /vagrant/configurationfiles/admin.kubeconfig
-    dest: /root/snap/helm/common/kube/config
-    remote_src: yes
-
-- name: Install Tiller
-  shell: helm init
-
-- name: Verify, if Tiller was installed
-  shell: kubectl get pods --namespace kube-system -l name=tiller
-  register: kubectl_kube_system_pods
-  until: kubectl_kube_system_pods.stdout.find("Running") != -1
-  retries: 5
-  delay: 10
-```
-
 We need to add some RBAC config for Tiller: https://docs.helm.sh/using_helm/#tiller-and-role-based-access-control
 
 #### Verification, if Helm & Tiller were installed correctly
 
-Let´s create a Hello-World Helm Chart: https://github.com/helm/helm/blob/master/docs/chart_template_guide/getting_started.md#a-starter-chart
+Let´s create a [Hello-Helm-World Chart](https://github.com/helm/helm/blob/master/docs/chart_template_guide/getting_started.md#a-starter-chart), as there doesn´t seem to be a standard one. 
 
+We use a standard `helm create hello-helm-world` and override the nginx image simply. Then we install it, verify if a pod is running and delete it again.
 
+```bash
+# Verify, if Helm was installed successfully
+- name: Ensure hello-helm-world directory exists (otherwise, the helm create will fail with permission denied)
+  file:
+    path: /home/vagrant/hello-helm-world/
+    state: directory
+
+- name: Create a Hello-Helm-World Chart
+  shell: helm create hello-helm-world
+  become: yes
+
+- name: Override values.yaml for setting node-hello instead of nginx as image
+  copy:
+    src: values.yaml
+    dest: /home/vagrant/hello-helm-world/values.yaml
+    force: yes
+
+- name: Run Hello-Helm-World Chart
+  shell: "helm install --name hello-helm-world ./hello-helm-world"
+
+- name: Check if Hello-Helm-World Pod is running
+  shell: kubectl get pods -l app=hello-helm-world
+  register: helm_result
+  until: helm_result.stdout.find("Running") != -1
+  retries: 10
+  delay: 10
+
+- name: Show Hello-Helm-World Pod
+  debug:
+    msg: "{{ helm_result.stdout_lines }}"
+
+- name: Delete Hello-Helm-World Release
+  shell: "helm delete --purge hello-helm-world"
+
+- name: Delete hello-helm-world directory
+  file:
+    path: /home/vagrant/hello-helm-world/
+    state: absent
+```
 
 #### Helm Charts
 

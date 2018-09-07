@@ -30,6 +30,11 @@
 
 - name: Install Tiller
   shell: "helm init --service-account {{ tiller_service_account_name }}"
+  register: helm_init_result
+
+- name: Show helm init result
+  debug:
+    msg: "{{ helm_init_result.stdout_lines }}"
 
 - name: Verify, if Tiller was installed
   shell: kubectl get pods --namespace kube-system -l name=tiller
@@ -38,4 +43,41 @@
   retries: 5
   delay: 10
 
+# Verify, if Helm was installed successfully
+- name: Ensure hello-helm-world directory exists (otherwise, the helm create will fail with permission denied)
+  file:
+    path: /home/vagrant/hello-helm-world/
+    state: directory
+
+- name: Create a Hello-Helm-World Chart
+  shell: helm create hello-helm-world
+  become: yes
+
+- name: Override values.yaml for setting node-hello instead of nginx as image
+  copy:
+    src: values.yaml
+    dest: /home/vagrant/hello-helm-world/values.yaml
+    force: yes
+
+- name: Run Hello-Helm-World Chart
+  shell: "helm install --name hello-helm-world ./hello-helm-world"
+
+- name: Check if Hello-Helm-World Pod is running
+  shell: kubectl get pods -l app=hello-helm-world
+  register: helm_result
+  until: helm_result.stdout.find("Running") != -1
+  retries: 10
+  delay: 10
+
+- name: Show Hello-Helm-World Pod
+  debug:
+    msg: "{{ helm_result.stdout_lines }}"
+
+- name: Delete Hello-Helm-World Release
+  shell: "helm delete --purge hello-helm-world"
+
+- name: Delete hello-helm-world directory
+  file:
+    path: /home/vagrant/hello-helm-world/
+    state: absent
 
