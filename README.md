@@ -457,6 +457,17 @@ The role [helm-tiller](/roles/helm-tiller/tasks/main.yml) takes care of the inst
   delay: 10
 ```
 
+We need to add some RBAC config for Tiller: https://docs.helm.sh/using_helm/#tiller-and-role-based-access-control
+
+#### Verification, if Helm & Tiller were installed correctly
+
+Let´s create a Hello-World Helm Chart: https://github.com/helm/helm/blob/master/docs/chart_template_guide/getting_started.md#a-starter-chart
+
+
+
+#### Helm Charts
+
+Start browsing here: https://github.com/helm/charts
 
 ## Commands
 

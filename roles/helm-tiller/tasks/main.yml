@@ -13,8 +13,23 @@
     dest: /root/snap/helm/common/kube/config
     remote_src: yes
 
+- name: Define ServiceAccount name for Tiller
+  set_fact:
+    tiller_service_account_name: "tiller"
+
+- name: Template ServiceAccount and ClusterRoleBinding RBAC configfile for Tiller
+  template:
+    src: tiller-rbac-config.yaml.j2
+    dest: /root/snap/helm/common/kube/tiller-rbac-config.yaml
+
+- name: Apply ServiceAccount and ClusterRoleBinding for Tiller
+  shell: kubectl apply --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f /root/snap/helm/common/kube/tiller-rbac-config.yaml
+
+- name: Update Helm repos
+  shell: helm repo update
+
 - name: Install Tiller
-  shell: helm init
+  shell: "helm init --service-account {{ tiller_service_account_name }}"
 
 - name: Verify, if Tiller was installed
   shell: kubectl get pods --namespace kube-system -l name=tiller
