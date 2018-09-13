@@ -82,11 +82,13 @@ see https://blog.docker.com/2017/08/what-is-containerd-runtime/
 
 https://kubernetes.io/blog/2018/05/24/kubernetes-containerd-integration-goes-ga/
 
+
+
 # Networking
 
 https://prefetch.net/blog/2018/01/20/generating-kubernetes-pod-cidr-routes-with-ansible/
 
-### CNI - Container Network Intercafe
+## CNI - Container Network Intercafe
 
 "CNI (Container Network Interface), a Cloud Native Computing Foundation project, consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins."
 
@@ -96,7 +98,7 @@ Which CNI-Provider to choose:
 
 https://chrislovecnm.com/kubernetes/cni/choosing-a-cni-provider/
 
-### Flannel
+## Flannel
 
 "flannel is a virtual network that attaches IP addresses to containers" 
 
@@ -107,7 +109,7 @@ https://coreos.com/flannel/docs/latest/kubernetes.html
 
 flannel will be deployed to worker: " deploy the flannel pod on each Node"
 
-##### Flannel with Kubernetes on Vagrant
+### Flannel with Kubernetes on Vagrant
 
 Trouble: https://github.com/coreos/flannel/blob/master/Documentation/troubleshooting.md#vagrant
 
@@ -123,7 +125,7 @@ Solution: https://stackoverflow.com/a/48755233/4964553, add the following line:
 
 in https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
-##### Flannel with Docker
+### Flannel with Docker
 
 This is a good overview (from https://blog.laputa.io/kubernetes-flannel-networking-6a1cb1f8ec7c):
 
@@ -148,7 +150,7 @@ See the following links:
 * https://coreos.com/flannel/docs/latest/flannel-config.html
 * https://icicimov.github.io/blog/kubernetes/Kubernetes-cluster-step-by-step-Part4/
 
-##### Kubernetes DNS (kube-dns)
+### Kubernetes DNS (kube-dns)
 
 Debug Service DNS: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/#does-the-service-work-by-ip
 
@@ -169,7 +171,7 @@ https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/:
 > Kubernetes DNS schedules a DNS Pod and Service on the cluster, and configures the kubelets to tell individual containers to use the DNS Service’s IP to resolve DNS names.
 
 
-###### nslookup for kubernetes not working in kubedns / main.yml
+#### nslookup for kubernetes not working in kubedns / main.yml
 
 We set `--ip-masq=false` inside the `docker.service`. The problem is
 
@@ -195,7 +197,7 @@ Name:      kubernetes
 Address 1: 10.32.0.1 kubernetes.default.svc.cluster.local
 ```
 
-###### if nslookup still doesnt work - "If the outer resolv.conf points to 127.0.0.1:53, then you will have a DNS lookup loop"
+#### if nslookup still doesnt work - "If the outer resolv.conf points to 127.0.0.1:53, then you will have a DNS lookup loop"
 
 The problem is node DNS configuration inheritance! See https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#inheriting-dns-from-the-node
 
@@ -231,7 +233,7 @@ nameserver 10.0.2.3
 
 See https://stackoverflow.com/questions/45246147/kubernetes-kubedns-sidecar-and-masq-crashes-if-i-do-a-nslookup/52036125#52036125
 
-###### Busybox seems to have nslookup problems
+#### Busybox seems to have nslookup problems
 
 You won´t believe it: But the latest busybox image isn´t able to do a proper `nslookup`:
 
@@ -240,6 +242,8 @@ https://github.com/kubernetes/kubernetes/issues/66924
 https://github.com/docker-library/busybox/issues/48
 https://github.com/kelseyhightower/kubernetes-the-hard-way/issues/356
 https://stackoverflow.com/a/52036125/4964553
+
+
 
 
 ## Dashboard
@@ -267,7 +271,7 @@ And the dashboard could´nt be accesses right away, only manually by Johannes wi
 Usage of Dashboard is described here: https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 
 
-#### Accessing k8s resources (like the Dashboard)
+### Accessing k8s resources (like the Dashboard)
 
 General docs for k8s service access: https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/
 
@@ -279,7 +283,7 @@ If you´re using [Proxy-mode: iptables](https://kubernetes.io/docs/concepts/serv
 
 ![iptables-proxy-access](https://d33wubrfki0l68.cloudfront.net/837afa5715eb31fb9ca6516ec6863e810f437264/42951/images/docs/services-iptables-overview.svg)
 
-###### Configure kubectl to access our k8s cluster
+#### Configure kubectl to access our k8s cluster
 
 If you want to interact with your k8s cluster, you need to setup your CLI for the specific cluster (`config set-cluster`), user (`config set-credentials`) and context (`config set-context`). All three are applied by a subsequent `config use-context`. For our `kubernetes-the-ansible-way` cluster, using the `admin` user, this is the following:
 
@@ -315,7 +319,7 @@ or have a look at your configuration with `kubectl config view` (see https://kub
 > Keep in mind, that a Kubernetes context is a triple out of cluster(name), user(name) & namespace. [See the docs](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#define-clusters-users-and-contexts)
 
 
-###### Authentication
+#### Authentication
 
 See https://kubernetes.io/docs/reference/access-authn-authz/authentication/. 
 
@@ -371,7 +375,7 @@ If not, you´ll see a message like this:
 ```
 
 
-###### Authorization
+#### Authorization
 
 See https://kubernetes.io/docs/reference/access-authn-authz/authorization/
 
@@ -381,7 +385,7 @@ kubernetes-the-hard-way configure Node and RBAC authorization modules. [RBAC is 
 
 For configuring a Dashboard user, see https://github.com/kubernetes/dashboard/wiki/Creating-sample-user#bearer-token
 
-###### Access Dashboard directly on worker-nodes
+#### Access Dashboard directly on worker-nodes
 
 As we deployed Dashboard with `NodePort`, run `kubectl get services -n kube-system` to get the NodePort of your Dashboard Service:
 
@@ -415,17 +419,17 @@ kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --imag
 kubectl expose deployment hello-world --type=NodePort --name=hello-world-service
 ```
 
-## Helm
+# Helm
 
 Install Helm / Tiller: https://docs.helm.sh/using_helm/
 
-#### Helm client
+### Helm client
 
 Mac: `brew install kubernetes-helm`
 
 Windows: `choco install kubernetes-helm`
 
-#### Helm server (Tiller)
+### Helm server (Tiller)
 
 https://docs.helm.sh/using_helm/#installing-tiller
 
@@ -433,7 +437,7 @@ The role [helm-tiller](/roles/helm-tiller/tasks/main.yml) takes care of the inst
 
 We need to add some RBAC config for Tiller: https://docs.helm.sh/using_helm/#tiller-and-role-based-access-control
 
-#### Verification, if Helm & Tiller were installed correctly
+### Verification, if Helm & Tiller were installed correctly
 
 Let´s create a [Hello-Helm-World Chart](https://github.com/helm/helm/blob/master/docs/chart_template_guide/getting_started.md#a-starter-chart), as there doesn´t seem to be a standard one. 
 
@@ -479,11 +483,11 @@ We use a standard `helm create hello-helm-world` and override the nginx image si
     state: absent
 ```
 
-#### Helm Charts
+### Helm Charts
 
 Start browsing here: https://github.com/helm/charts
 
-## Commands
+# Commands
 
 ```bash
 
@@ -494,7 +498,7 @@ curl --cacert certificates/ca.pem --key certificates/admin-key.pem --cert certif
 
 ```
 
-## Links
+# Links
 
   * [kubectl cheatsheet][0] 
   * [Exam Experience][1] 
