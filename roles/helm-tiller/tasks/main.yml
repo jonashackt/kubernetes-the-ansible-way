@@ -25,12 +25,12 @@
 - name: Apply ServiceAccount and ClusterRoleBinding for Tiller
   shell: kubectl apply --kubeconfig /vagrant/configurationfiles/admin.kubeconfig -f /root/snap/helm/common/kube/tiller-rbac-config.yaml
 
-- name: Update Helm repos
-  shell: helm repo update
-
 - name: Install Tiller
   shell: "helm init --service-account {{ tiller_service_account_name }}"
   register: helm_init_result
+
+- name: Update Helm repos
+  shell: helm repo update
 
 - name: Show helm init result
   debug:
