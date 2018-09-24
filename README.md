@@ -5,8 +5,10 @@
 [![versionkubernetes](https://img.shields.io/badge/etcd-v3.3.5-brightgreen.svg)]()
 [![versionkubernetes](https://img.shields.io/badge/docker-18.06.1-brightgreen.svg)]()
 [![versionkubernetes](https://img.shields.io/badge/flannel-v0.10.0-brightgreen.svg)]()
-[![versionkubernetes](https://img.shields.io/badge/ansible-2.6.3-orange.svg)]()
-[![versionkubernetes](https://img.shields.io/badge/vagrant-2.1.2-orange.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/ansible-2.6.4-orange.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/vagrant-2.1.0-orange.svg)]()
+
+> There are currently problems with newer Vagrant versions than 2.1.0!
 
 Bootstrap Kubernetes the Ansible way on Everything (here: Vagrant). Inspired by [Kelsey Hightower´s kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way), but refactored to Infrastructure-as-Code. 
 
@@ -83,6 +85,13 @@ see https://blog.docker.com/2017/08/what-is-containerd-runtime/
 https://kubernetes.io/blog/2018/05/24/kubernetes-containerd-integration-goes-ga/
 
 
+# Creating a K8s cluster from scratch
+
+What we´re actually doing here is to create a K8s cluster from scratch: https://kubernetes.io/docs/setup/scratch/ 
+
+> Nodes: "Many Getting-started-guides make a distinction between the master node and regular nodes. This is not strictly necessary."
+
+> Allocate one CIDR subnet for each node’s PodIPs, or a single large CIDR from which smaller CIDRs are automatically allocated to each node. 
 
 # Networking
 
@@ -126,6 +135,10 @@ Solution: https://stackoverflow.com/a/48755233/4964553, add the following line:
 in https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 ### Flannel with Docker
+
+Docs: https://github.com/coreos/flannel/blob/master/Documentation/running.md
+
+Great Blog: https://icicimov.github.io/blog/kubernetes/Kubernetes-cluster-step-by-step-Part4/
 
 This is a good overview (from https://blog.laputa.io/kubernetes-flannel-networking-6a1cb1f8ec7c):
 
