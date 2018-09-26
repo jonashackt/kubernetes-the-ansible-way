@@ -288,7 +288,7 @@ Usage of Dashboard is described here: https://kubernetes.io/docs/tasks/access-ap
 
 General docs for k8s service access: https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/
 
-> Be sure to know the [service publishing types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types), especially `ClusterIP`, `NodePort`, `Loadbalancer`
+> Be sure to know the [service publishing types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types), especially `ClusterIP` (which is only accessible inside the cluster!), `NodePort` & `Loadbalancer`
 
 Also have a look on how Services are accessing Pods - and are itself accessed by the kube-apiserver: https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-iptables
 

@@ -22,12 +22,12 @@
     - { src: "configurationfiles/kube-proxy.kubeconfig", dest: /var/lib/kube-proxy/kubeconfig }
 
 # Install standard Docker package
-- name: install flannel-pre-configured Docker on Workers
+- name: install Docker on Workers
   include_role:
     name: docker
 
 # Then Flannel has to be installed and configured, so that the Environment variables are present for the Docker service to startup.
-- name: install and configure flannel CNI networking
+- name: install and configure flannel CNI networking & configure Docker to use Flannel
   include_role:
     name: flannel
 
