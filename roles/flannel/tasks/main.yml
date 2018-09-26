@@ -1,23 +1,4 @@
-- name: Set flannel network conf on etcd
-  uri:
-    client_cert: /var/lib/kubelet/{{ ansible_hostname }}.pem
-    client_key: /var/lib/kubelet/{{ ansible_hostname }}-key.pem
-    validate_certs: no
-    url: https://master-0.k8s:2379/v2/keys/kubernetes-cluster/network/config
-    body:
-      'value={"Network": "{{ kubernetes_cluster_cidr }}",
-         "SubnetLen": 24,
-         "Backend": {
-             "Type": "vxlan",
-             "VNI": 1
-         }
-       }'
-    status_code: 200,201
-    method: PUT
-    return_content: yes
-  run_once: true
-
-- name: install package
+- name: Install flannel package
   apt:
     name: flannel
     update_cache: yes
@@ -27,17 +8,25 @@
     src: flannel.service.j2
     dest: /lib/systemd/system/flannel.service
 
-- name: restart flannel
+- name: Restart flannel
   systemd:
     daemon_reload: yes
     enabled: yes
     name: flannel
     state: restarted
 
-# Configure flannel-flavoured Docker systemd service
-- name: Copy Docker systemd unit file
-  template:
-    src: docker.service.j2
-    dest: /lib/systemd/system/docker.service
+- name: Verify if flannel is added as network interface
+  shell: ip addr
+  register: ip_addr_result
+  until: ip_addr_result.stdout.find("flannel.1") != -1
+  retries: 5
+  delay: 10
+  tags: network
+  run_once: true
 
+- name: Show, if network interface flannel.1 was created
+  debug:
+    msg: "{{ ip_addr_result.stdout_lines }}"
+  tags: network
+  run_once: true
 

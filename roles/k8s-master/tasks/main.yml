@@ -20,6 +20,33 @@
     - certificates/service-account.pem
     - encryption/encryption-config.yaml
 
+- name: Set flannel network conf on etcd
+  uri:
+    client_cert: /var/lib/kubernetes/kube-apiserver.pem
+    client_key: /var/lib/kubernetes/kube-apiserver-key.pem
+    validate_certs: no
+    url: https://master-0.k8s:2379/v2/keys/kubernetes-cluster/network/config
+    body:
+      'value={"Network": "{{ kubernetes_cluster_cidr }}",
+         "SubnetLen": 24,
+         "Backend": {
+             "Type": "vxlan",
+             "VNI": 1
+         }
+       }'
+    status_code: 200,201
+    method: PUT
+    return_content: yes
+  run_once: true
+
+# Also bring Flannel onto the master nodes
+- name: Install and configure Flannel networking
+  include_role:
+    name: flannel
+  vars:
+    etcd_certfile: "/var/lib/kubernetes/kube-apiserver.pem"
+    etcd_keyfile: "/var/lib/kubernetes/kube-apiserver-key.pem"
+
 - name: download master component binaries
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"

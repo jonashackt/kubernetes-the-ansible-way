@@ -27,9 +27,18 @@
     name: docker
 
 # Then Flannel has to be installed and configured, so that the Environment variables are present for the Docker service to startup.
-- name: install and configure flannel CNI networking & configure Docker to use Flannel
+- name: Install and configure Flannel networking & configure Docker to use Flannel
   include_role:
     name: flannel
+  vars:
+    etcd_certfile: "/var/lib/kubelet/{{ ansible_hostname }}.pem"
+    etcd_keyfile: "/var/lib/kubelet/{{ ansible_hostname }}-key.pem"
+
+# Configure flannel-flavoured Docker systemd service
+- name: Copy Docker systemd unit file
+  template:
+    src: docker.service.j2
+    dest: /lib/systemd/system/docker.service
 
 # Finally the Docker service could be started.
 - name: starting the Docker service will only work after Flannel has been installed
@@ -38,21 +47,6 @@
     state: restarted
     daemon_reload: true
     enabled: yes
-
-- name: Verify if flannel is added as network interface
-  shell: ip addr
-  register: ip_addr_result
-  until: ip_addr_result.stdout.find("flannel.1") != -1
-  retries: 5
-  delay: 10
-  tags: network
-  when: inventory_hostname == 'worker-0'
-
-- name: Show, if network interface flannel.1 was created
-  debug:
-    msg: "{{ ip_addr_result.stdout_lines }}"
-  tags: network
-  when: inventory_hostname == 'worker-0'
 
 - name: install packages
   apt:
