@@ -12,7 +12,9 @@
 
 Bootstrap Kubernetes the Ansible way on Everything (here: Vagrant). Inspired by [Kelsey Hightower´s kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way), but refactored to Infrastructure-as-Code. 
 
-But we wanted to focus on different aspects:
+[![asciicast](https://asciinema.org/a/203427.png)](https://asciinema.org/a/203427)
+
+We wanted to focus on different aspects:
 
 * __No__ Google Cloud Platform fixation - open for many infrastructures
 * Implement the concept of __[Infrastructure-as-Code](https://en.wikipedia.org/wiki/Infrastructure_as_Code)__, so that... 
@@ -50,6 +52,8 @@ Then do the usual:
 ```bash
 vagrant up
 ```
+
+[![asciicast](https://asciinema.org/a/TbhGtaNlC3LKRIm40P2c6WSH3.png)](https://asciinema.org/a/TbhGtaNlC3LKRIm40P2c6WSH3)
 
 And check, if you can reach a node:
 

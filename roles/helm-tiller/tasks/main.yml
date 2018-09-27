@@ -1,6 +1,6 @@
 # see https://docs.helm.sh/using_helm/#installing-tiller
 - name: Install Helm
-  shell: snap install helm
+  shell: "snap install helm --classic"
 
 - name: Ensure helm directory exists
   file:
