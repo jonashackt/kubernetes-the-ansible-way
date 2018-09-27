@@ -326,15 +326,22 @@ https://stackoverflow.com/a/52036125/4964553
 
 https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 
-Installation: https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup (don´t use kubectl proxy!)
+Installation: https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup
 
-Access: Through API-Server: https://github.com/kubernetes/dashboard/wiki/Accessing-Dashboard---1.6.X-and-below#api-server
+Access: Through API-Server: 
 
 > In case Kubernetes API server is exposed and accessible from outside you can directly access dashboard at: 
 
 ```
-https://external.k8s:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+kubectl -n kube-system get secret
+kubectl -n kube-system describe secret kubernetes-dashboard-token-7pxdg
+
+curl -sSk -H "Authorization: Bearer YOURTOKENHERE" https://external.k8s:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/ -v
 ```
+
+Or use a RESTClient like Postman:
+
+![use-postman-to-access-via-external.k8s-dashboard](screenshots/use-postman-to-access-via-external.k8s-dashboard.png)
 
 Grant Dashboard Admin-Rights: https://github.com/kubernetes/dashboard/wiki/Access-control#admin-privileges
 
@@ -448,6 +455,19 @@ If not, you´ll see a message like this:
 }
 ```
 
+If you deployed another app like
+
+```
+kubectl run hostnames --image=k8s.gcr.io/serve_hostname \
+                        --labels=app=hostnames \
+                        --port=9376 \
+                        --replicas=3
+kubectl expose deployment hostnames --port=80 --target-port=9376
+```
+
+and want to access that through `https://external.k8s:6443/api/v1/namespaces/default/services/hostnames/proxy/` (using Bearer Token):
+
+![use-postman-to-access-via-external.k8s](screenshots/use-postman-to-access-via-external.k8s.png)
 
 #### Authorization
 
