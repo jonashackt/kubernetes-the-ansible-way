@@ -163,6 +163,67 @@ See the following links:
 * https://coreos.com/flannel/docs/latest/flannel-config.html
 * https://icicimov.github.io/blog/kubernetes/Kubernetes-cluster-step-by-step-Part4/
 
+
+### Flannel also needs to run on the Master nodes!
+
+__This one took me ages to understand...__ If you´re new to a technology and want to learn it, the hardest part always is to ask the right questions. 
+
+It all started out with the need to access the Kubernetes Dashboard, which was the first "real" application, we deployed to our cluster. This didn´t work for several reasons:
+
+https://github.com/jonashackt/kubernetes-the-ansible-way/issues/10
+
+The journey started with that kind of error:
+
+```
+Error: 'dial tcp 10.200.27.2:8443: getsockopt: connection timed out'
+Trying to reach: 'http://10.200.27.2:8443/'
+``` 
+
+After lot´s of reading and debuging, [it became clear that](https://github.com/kubernetes/dashboard/issues/2855#issuecomment-367697539):
+
+> This kind of errors always come from API server, not the application you are trying to reach. Check your cluster config and see if you can access other applications through service proxy first.
+
+__The first problem to solve [was a known Ubuntu bug](https://github.com/jonashackt/kubernetes-the-ansible-way/commit/3091bbe9751674d54500e62d089479dc8c8266f2)__, which then made cluster internal routing from k8s Services to Pods reliable.
+
+The next step was to use the [Kubernetes cluster´s corresponding version of Dashboard](https://github.com/jonashackt/kubernetes-the-ansible-way/commit/9866c71c3d09240f6aa0313ed45adc32285da529)
+
+
+Finally it became clear, that __absolutely NO app was reachable from outside the cluster correctly__: https://github.com/jonashackt/kubernetes-the-ansible-way/issues/12
+
+The [Kubernetes Debug Guides](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service) were of great help!
+
+__An interlude__ was to learn how to do a correct `curl` to a Kubernetes cluster, which __is NOT__ to `curl https://localhost:8080/api/v1/namespaces/default/services/http:hostnames:80/proxy/ -v` Alongside the unnecessary `http:` (we only need to set that when `https:` is needed), the correct `cacert` was missing.
+
+
+Then again after more and more reading and tinkering, the first good looking idea came to my mind: https://github.com/jonashackt/kubernetes-the-ansible-way/issues/12#issuecomment-418136488. [jeroenjacobs1205](https://github.com/jeroenjacobs1205) helped me a lot [with his comment](https://github.com/kubernetes/dashboard/issues/2340#issuecomment-328765833) as I started to question the network design of our `kubernetes-the-ansible-way` cluster... The process of thinking took a while, even if I moved steps forward!
+
+After another interlude of [using the correct cluster-name](https://github.com/jonashackt/kubernetes-the-ansible-way/commit/cbe34d009bddb54d8b770f135222184a65ead78c) when configuring `kubectl` to access the k8s cluster, this __finally (again)__ lead me to the point, where the [first way of accessing services in the cluster](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/#ways-to-connect) finally worked reliable for me ("Access services through public IPs" __directly on the worker nodes__).  
+
+But that wasn´t all for me. I wanted to access my applications also __through the Proxy Verb__ aka `kube-apiserver` ([the second way in the docs](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/#ways-to-connect)).
+
+As I said, I was not convinced of the general cluster design of [kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way) and therefore created https://github.com/kelseyhightower/kubernetes-the-hard-way/issues/389. As I read through the official [create a K8s cluster from scratch guide](https://kubernetes.io/docs/setup/scratch/) I got more and more convinced on that. There are recommendations [like the following](https://kubernetes.io/docs/setup/scratch/#configuring-and-installing-base-software-on-nodes):
+
+> While the basic node services (kubelet, kube-proxy, docker) are typically started and managed using traditional system administration/automation approaches, the remaining master components of Kubernetes are all configured and managed by Kubernetes
+
+[and that](https://kubernetes.io/docs/setup/scratch/#kube-proxy)
+
+> All nodes should run kube-proxy. (Running kube-proxy on a “master” node is not strictly required, but being consistent is easier.)
+
+__BUT__ it turned out, that these are only recommendations! It´s not needed to access our applications, there´s another problem here. And again I´am really glad to have read [jeroenjacobs1205´s comment](https://github.com/kubernetes/dashboard/issues/2340#issuecomment-328765833)! Because `kube-apiserver` can´t access `kube-proxy` on the nodes:
+
+![apiserver-access-nodes](screenshots/apiserver-access-nodes.png)
+
+or looked at it on the big picture:
+
+![apiserver-access-nodes-big-pic](screenshots/apiserver-access-nodes-big-pic.png)
+ 
+ 
+In the end it is really simple: __[Flannel needs to be present on the master nodes](https://stackoverflow.com/a/39179200/4964553)!__ 
+
+Now after [having Flannel also running and configured on all master nodes](https://github.com/jonashackt/kubernetes-the-ansible-way/commit/fcd203d1355cb75d5586a738472329e756848834), we can access our cluster applications with the help of the proxy verb. After running `kubectl proxy`, just point the browser to http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#! and Dashboard login should show up!
+
+
+
 ### Kubernetes DNS (kube-dns)
 
 Debug Service DNS: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/#does-the-service-work-by-ip
