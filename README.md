@@ -352,6 +352,18 @@ And the dashboard could´nt be accesses right away, only manually by Johannes wi
 Usage of Dashboard is described here: https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 
 
+### Accessing Kubernetes Dashboard with the Browser
+
+Accessing Kubernetes Dashboard with the Browser will only work, if you use the `kubectl proxy` command (assuming correctly initialized `kubectl config set-cluster`, `set-credentials`, `set-context` & `use-context` commands beforehand) and point your Browser to:
+
+`http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/`
+ 
+![dashboard-browser-access-proxy](screenshots/dashboard-browser-access-proxy.png)
+ 
+Otherwise, you need to somehow provide a (OAuth) Bearer Token, which isn´t possible in normal Browsers.
+
+
+
 ### Accessing k8s resources (like the Dashboard)
 
 General docs for k8s service access: https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-services/
@@ -501,7 +513,7 @@ kubectl -n kube-system describe secret kubernetes-dashboard-token-7pxdg
 
 and paste the Token into the provided field of the Loginscreen. Now you should see the Dashboard:
 
-![kubernetes-dashboard](kubernetes-dashboard.png)
+![dashboard-browser-access-worker](screenshots/dashboard-browser-access-worker.png)
 
 #### Access a k8s cluster app (pod) through a Service
 
