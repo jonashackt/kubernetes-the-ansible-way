@@ -29,12 +29,12 @@
   shell: "helm init --service-account {{ tiller_service_account_name }}"
   register: helm_init_result
 
-- name: Update Helm repos
-  shell: helm repo update
-
 - name: Show helm init result
   debug:
     msg: "{{ helm_init_result.stdout_lines }}"
+
+- name: Update Helm repos
+  shell: helm repo update
 
 - name: Verify, if Tiller was installed
   shell: kubectl get pods --namespace kube-system -l name=tiller

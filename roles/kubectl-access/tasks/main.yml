@@ -1,19 +1,28 @@
 # see https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/10-configuring-kubectl.md
+# see https://github.com/ansible/ansible/blob/37ae2435878b7dd76b812328878be620a93a30c9/lib/ansible/module_utils/facts.py#L267
+# for ansible_os_familys
 - name: Install kubectl
   shell: "snap install kubectl --classic"
+  when: ansible_os_family == "Debian"
+
+- name: Install kubectl on Mac
+  homebrew:
+    name: kubernetes-cli
+    state: present
+  when: ansible_os_family == "Darvin"
 
 - name: Configuring kubectl for Remote Access - kubectl config set-cluster
   shell: |
     kubectl config set-cluster {{ kubernetes_cluster_name }} \
-      --certificate-authority=/vagrant/certificates/ca.pem \
+      --certificate-authority={{ path_ca }} \
       --embed-certs=true \
       --server=https://external.k8s:6443
 
 - name: Configuring kubectl for Remote Access - kubectl config set-credentials
   shell: |
     kubectl config set-credentials admin \
-      --client-certificate=/vagrant/certificates/admin.pem \
-      --client-key=/vagrant/certificates/admin-key.pem
+      --client-certificate={{ path_cert }} \
+      --client-key={{ path_key }}
 
 - name: Configuring kubectl for Remote Access - kubectl config set-context
   shell: |
@@ -45,3 +54,4 @@
 - name: Show output of k8s node state
   debug:
     msg: "{{ k8s_node_state.stdout_lines }}"
+

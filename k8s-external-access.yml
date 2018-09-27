@@ -6,10 +6,29 @@
 - hosts: external
   become: yes
   roles:
-    - { role: kubectl-remote-access, tags: kubectl }
+    - { role: kubectl-access,
+        path_ca: "/vagrant/certificates/ca.pem",
+        path_cert: "/vagrant/certificates/admin.pem",
+        path_key: "/vagrant/certificates/admin-key.pem",
+        tags: externalaccess }
     - { role: helm-tiller, tags: helm }
 
 - hosts: master-0
   become: yes
   roles:
-  - { role: dashboard, tags: dashboard }
+    - { role: dashboard, tags: dashboard }
+
+- hosts: localhost
+  connection: local
+  roles:
+    - { role: kubectl-access,
+        path_ca: "certificates/ca.pem",
+        path_cert: "certificates/admin.pem",
+        path_key: "certificates/admin-key.pem",
+        tags: localaccess }
+  tasks:
+    - name: Congratulations!
+      debug:
+        msg:
+        - "Your kubernetes-the-ansible-way cluster is now fully ready!"
+        - "Simply use `kubectl` command - everything is initialized for you!"
