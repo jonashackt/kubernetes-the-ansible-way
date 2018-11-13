@@ -2,6 +2,7 @@
 set -euo pipefail
 
 vagrant up
+vagrant dns --install
 ansible-playbook k8s-certs-and-config.yml -i hosts
 ansible-playbook k8s-master-nodes.yml -i hosts
 ansible-playbook k8s-worker-nodes.yml -i hosts
