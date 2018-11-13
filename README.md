@@ -30,7 +30,6 @@ The origin of this repository was set by a team of [Johannes Barop](https://gith
 Install [Ansible](https://www.ansible.com/), [Vagrant](https://www.vagrantup.com/) and the following Plugins:
  
 * [vagrant-dns](https://github.com/BerlinVagrant/vagrant-dns)
-* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
 
 And then run `vagrant dns --install`. Check, if the domain `.k8s` was registered correctly with:
 
