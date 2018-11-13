@@ -3,9 +3,9 @@
 [Unit]
 Description=Docker configuration for Kubernetes
 Documentation=https://docs.docker.com/install/linux/linux-postinstall/
-After=network-online.target docker.socket firewalld.service flannel.service
+After=network-online.target firewalld.service flannel.service
 Wants=network-online.target
-Requires=docker.socket flannel.service
+Requires=flannel.service
  
 [Service]
 Type=notify
@@ -23,7 +23,7 @@ ExecStart=/usr/bin/dockerd \
     --iptables=false \
     --ip-masq=false \
     --ip-forward=true \
-    -H fd://
+    -H unix://
 
 ExecReload=/bin/kill -s HUP $MAINPID
 LimitNOFILE=1048576
