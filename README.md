@@ -100,7 +100,7 @@ What we´re actually doing here is to create a K8s cluster from scratch: https:/
 
 https://prefetch.net/blog/2018/01/20/generating-kubernetes-pod-cidr-routes-with-ansible/
 
-## CNI - Container Network Intercafe
+## CNI - Container Network Interface
 
 "CNI (Container Network Interface), a Cloud Native Computing Foundation project, consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins."
 
