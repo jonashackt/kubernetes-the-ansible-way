@@ -28,5 +28,3 @@ script:
   - ansible-playbook k8s-worker-nodes.yml -i hosts --syntax-check
   - ansible-playbook k8s-external-access.yml -i hosts --syntax-check
 
-notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/

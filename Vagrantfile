@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
         'worker-0' => '172.16.2.100',
         'worker-1' => '172.16.2.101',
         'worker-2' => '172.16.2.102',
-        # init node to create certificates, configurationfiles, encryption and host inital LB
+        # init node to create certificates, configurationfiles, encryption
         'init' => '172.16.2.200',
         # host inital LB on k8s-external node
         'external' => '172.16.2.201'

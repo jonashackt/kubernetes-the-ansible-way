@@ -5,7 +5,7 @@
 [![versionkubernetes](https://img.shields.io/badge/etcd-v3.3.5-brightgreen.svg)]()
 [![versionkubernetes](https://img.shields.io/badge/docker-18.06.1-brightgreen.svg)]()
 [![versionkubernetes](https://img.shields.io/badge/flannel-v0.10.0-brightgreen.svg)]()
-[![versionkubernetes](https://img.shields.io/badge/ansible-2.6.4-orange.svg)]()
+[![versionkubernetes](https://img.shields.io/badge/ansible-2.7.1-orange.svg)]()
 [![versionkubernetes](https://img.shields.io/badge/vagrant-2.1.0-orange.svg)]()
 
 > There are currently problems with newer Vagrant versions than 2.1.0!
@@ -109,6 +109,8 @@ https://github.com/containernetworking/cni
 Which CNI-Provider to choose:
 
 https://chrislovecnm.com/kubernetes/cni/choosing-a-cni-provider/
+
+https://itnext.io/benchmark-results-of-kubernetes-network-plugins-cni-over-10gbit-s-network-36475925a560
 
 ## Flannel
 
