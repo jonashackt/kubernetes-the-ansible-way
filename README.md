@@ -619,6 +619,7 @@ curl --cacert certificates/ca.pem --key certificates/admin-key.pem --cert certif
   * [Best practice by google][5] 
   * [Tutorialspoint][6] 
   * Tutorials: https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/
+  * [15 Kubernetes Best Practices Every Developer Should Know by Spacelift](https://spacelift.io/blog/kubernetes-best-practices)
 
 
 [0]: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
